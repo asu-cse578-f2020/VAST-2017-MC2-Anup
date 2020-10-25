@@ -1,45 +1,36 @@
+/* index.js */
+import {drawHeatMap} from './heatMap.js';
 
-var mapSvg;
-
-var lineSvg;
 var lineWidth;
 var lineHeight;
 var lineInnerHeight;
 var lineInnerWidth;
 var lineMargin = { top: 20, right: 60, bottom: 60, left: 100 };
 
-var mapData;
-var timeData;
+var completeData;
+var factory;
+var chemical;
 
 // This runs when the page is loaded
 document.addEventListener('DOMContentLoaded', function() {
-  mapSvg = d3.select('#map');
-  lineSvg = d3.select('#linechart');
   
-  // Load both files before doing anything else
-  Promise.all([d3.json('data/africa.geojson'),
-               d3.csv('data/africa_gdp_per_capita.csv')])
+  // Load complete_data before doing anything else
+  Promise.all([d3.csv('../data/complete_data.csv')])
           .then(function(values){
     
-    mapData = values[0];
-    timeData = values[1];
-   
-    drawMap();
-  })
+    completeData = values[0];
+    drawHeatMap (completeData);
+    // Load the innovative vis (the first vis)
+  });
+
+  // On factory change call heat map with new heat map
+  d3.select('#factory').on('change', function(){
+    drawHeatMap (completeData);
+  });
+
+  // On chemical change call heat map with new heat map
+  d3.select('#chemical').on('change', function(){
+    drawHeatMap (completeData);
+  });
 
 });
-
-// Draw the map in the #map svg
-function drawMap() {
-  
-}
-
-
-// Draw the line chart in the #linechart svg for
-// the country argument (e.g., `Algeria').
-function drawLineChart(country) {
-
-  if(!country)
-    return;
-  
-}

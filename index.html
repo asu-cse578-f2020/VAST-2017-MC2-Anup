@@ -5,13 +5,26 @@
     <title>DV Project 1</title>
     <link rel='stylesheet' href='css/styles.css'>
     <script src='https://d3js.org/d3.v5.min.js'></script>
-    <script src='scripts/index.js'></script>
+    <script src='./scripts/index.js' type="module"></script>
+    <script src='./scripts/heatMap.js' type="module"></script>
 
   </head>
   <body>
     <div id='wrapper'>
-      <svg id='map'></svg>
-      <svg id='linechart'></svg>
+        <div>
+          <select id='factory'>
+            <option value='RFE'>Roadrunner Fitness Electronics</option>
+            <option value='KOF'>Kasios Office Furniture</option>
+            <option value='RCT'>Radiance ColourTek</option>
+            <option value='ISB'>Indigo Sol Boards</option>
+          </select>
+        </div> 
     </div>
+      <form id='chemical'>
+        <input type="radio" name="chemical" value="Methylosmolene" checked>Methylosmolene</input><br>
+        <input type="radio" name="chemical" value="Chlorodinine">Chlorodinine</input><br>
+        <input type="radio" name="chemical" value="AGOC-3A">AGOC-3A</input><br>
+        <input type="radio" name="chemical" value="Appluimonia">Appluimonia</input><br>
+      </form>
   </body>
 </html>
