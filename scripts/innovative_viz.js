@@ -16,6 +16,10 @@ d3.select("#innovative_dataviz").append("input")
 .attr("type","button")
 .attr("value", "Start")
 .attr("onClick","toggleAnimation()");
+
+compass = d3.select("#innovative_dataviz").select("svg").append("g")
+.attr("transform", "translate("+0 +","+(scatterPlotHeight+100)+")")
+
 // data
 var data;
 var windData;
@@ -198,9 +202,7 @@ function exitCircles(exit, t) {
 }
 
 function drawCompass(compassData){
-    console.log("lala",ind, compassData)
-  compass = d3.select("#innovative_dataviz").select("svg").append("g")
-  .attr("transform", "translate("+0 +","+(scatterPlotHeight+100)+")")
+
   compass.selectAll('g')
         .data(compassData)
         .join(
@@ -213,17 +215,15 @@ function updateCompass(update, t) {
 
     update.select('#speed')
         .attr("text-anchor", "middle")
-        .transition(t)
-        .text(d => d.speed)
+        .text(d=> "Wind Speed:" + d.speed)
 
     update.select('#direction')
         .attr("text-anchor", "middle")
-        .transition()
-        .text(d => d.direction)
+        .text(d=> "Wind direction:" + d.direction)
         
     update.select("line")
     .transition()
-    .duration(100)
+    .duration(500)
     .attr('transform',d => 'rotate('+ d.direction + ' 100 100)')
     .end()
     .then(circleTransitions);
@@ -251,7 +251,7 @@ function enterCompass(enter, t) {
 
     glyph.append("text")
     .attr("transform", "translate(100,110)")
-    .attr("id", "speed")
+    .attr("id", "direction")
     .style("text-anchor", "middle")
     .style("font-size", "8px") 
     .style("font-weight", "700")
