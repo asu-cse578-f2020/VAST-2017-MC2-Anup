@@ -32,5 +32,5 @@ document.addEventListener('DOMContentLoaded', function() {
   d3.select('#chemical').on('change', function(){
     drawHeatMap (completeData);
   });
-
+  
 });
