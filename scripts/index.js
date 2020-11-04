@@ -1,5 +1,6 @@
 /* index.js */
 import {drawHeatMap} from './heatMap.js';
+import { drawViolinPlot } from './violin.js';
 
 var lineWidth;
 var lineHeight;
@@ -8,6 +9,7 @@ var lineInnerWidth;
 var lineMargin = { top: 20, right: 60, bottom: 60, left: 100 };
 
 var completeData;
+var sensorData;
 var factory;
 var chemical;
 
@@ -15,11 +17,13 @@ var chemical;
 document.addEventListener('DOMContentLoaded', function() {
   
   // Load complete_data before doing anything else
-  Promise.all([d3.csv('../data/complete_data.csv')])
+  Promise.all([d3.csv('../data/complete_data.csv'),d3.csv('../data/sensor_data.csv')])
           .then(function(values){
     
     completeData = values[0];
+    sensorData= values[1];
     drawHeatMap (completeData);
+    drawViolinPlot(sensorData,'Chlorodinine') //placeholder to pass data
     // Load the innovative vis (the first vis)
   });
 
