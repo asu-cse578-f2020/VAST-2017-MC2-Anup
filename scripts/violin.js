@@ -2,6 +2,9 @@
 export {drawViolinPlot}
 var violinSvg;
 var filteredData;
+var margin = {top: 10, right: 30, bottom: 30, left: 40},
+var width = 460 - margin.left - margin.right,
+var height = 400 - margin.top - margin.bottom;
 function drawViolinPlot(data,Chemical)
 {
     //filtering out the data first
