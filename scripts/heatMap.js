@@ -14,7 +14,6 @@ function drawHeatMap(data){
 
     factory = d3.select("#factory").node().value;
     chemical = d3.select('input[name="chemical"]:checked').node().value;
-	console.log(factory, chemical)
 	var heatMapData = {};
 
 	// filter the data
@@ -52,26 +51,24 @@ function drawHeatMap(data){
 }
 
 function drawCalender(dateData){
+	
 	d3.selectAll(".month").remove()
-	console.log(dateData)
 	var weeksInMonth = function(month){
 		var m = d3.timeMonth.floor(month)
 		return d3.timeWeeks(d3.timeWeek.floor(m), d3.timeMonth.offset(m,1)).length;
 	}
 
-	var minDate = new Date(2016, 3, 1)
-	console.log(minDate)
-	var maxDate = new Date(2016, 12, 31)
+	var months = [d3.timeMonth(new Date(2016, 3, 1)),
+				 d3.timeMonth(new Date(2016, 7, 1)), 
+				 d3.timeMonth(new Date(2016, 11, 1))];
 
-	var cellMargin = 2,
-      cellSize = 20;
+	var cellMargin = 4, cellSize = 25;
 
 	var day = d3.timeFormat("%w"),
 		week = d3.timeFormat("%U"),
 		format = d3.timeFormat("%Y-%m-%d"),
 		titleFormat = d3.utcFormat("%a, %d-%b"),
-		monthName = d3.timeFormat("%B"),
-		months = d3.timeMonth.range(d3.timeMonth(minDate), d3.timeMonth(maxDate));
+		monthName = d3.timeFormat("%B")
 
 	var svg = d3.select("#heatmap").selectAll("svg")
 		.data(months)
@@ -79,11 +76,10 @@ function drawCalender(dateData){
 		.attr("class", "month")
 		.attr("height", ((cellSize * 7) + (cellMargin * 8) + 20) )
 		.attr("width", function(d) {
-		var columns = weeksInMonth(d);
+			var columns = weeksInMonth(d);
 			return ((cellSize * columns) + (cellMargin * (columns + 1)));
 		})
 		.append("g")
-
 
 	svg.append("text")
 		.attr("class", "month-name")
@@ -95,15 +91,14 @@ function drawCalender(dateData){
 		.attr("text-anchor", "middle")
 		.text(function(d) { return monthName(d); })
 
-
 	var rect = svg.selectAll("rect.day")
 		.data(function(d, i) { return d3.timeDays(d, new Date(d.getFullYear(), d.getMonth()+1, 1)); })
 		.enter().append("rect")
 		.attr("class", "day")
 		.attr("width", cellSize)
 		.attr("height", cellSize)
-		.attr("rx", 3).attr("ry", 3) // rounded corners
-		.attr("fill", '#eaeaea') // default light grey fill
+		.attr("rx", 3).attr("ry", 3)
+		.attr("fill", '#eaeaea')
 		.attr("y", function(d) { return (day(d) * cellSize) + (day(d) * cellMargin) + cellMargin; })
 		.attr("x", function(d) { return ((week(d) - week(new Date(d.getFullYear(),d.getMonth(),1))) * cellSize) + ((week(d) - week(new Date(d.getFullYear(),d.getMonth(),1))) * cellMargin) + cellMargin ; })
 		.on("mouseover", function(d) {
@@ -132,6 +127,5 @@ function drawCalender(dateData){
 		.style("fill", function(d) { return d3.interpolateYlGn(scale(lookup[d])); })
 		.select("title")
 		.text(function(d) { return titleFormat(new Date(d)) + ":  " + lookup[d]; });
-
 	
 }
