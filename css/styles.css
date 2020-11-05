@@ -28,3 +28,37 @@ html {
 h2, h3 {
   text-align:center;
 }
+
+
+#linechart {
+  border: 1px solid black;
+  border-radius: 10px;
+  height: 600px;
+  width: 6a00px;
+  margin: 5px;
+  text-align: center;
+}
+
+#text {
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  padding: 5px;
+}
+
+.axis path {
+  fill: none;
+  stroke: #777;
+  shape-rendering: crispEdges;
+}
+.axis text {
+  font-family: Lato;
+  font-size: 13px;
+}
+
+.lineChartColorText {
+  position: relative;
+  right: -20px;
+  width: 100px;
+  height: 120px;
+}
