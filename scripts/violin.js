@@ -45,6 +45,41 @@ function drawViolinPlot(data,Chemical)
     //making histogram
     var histogram = d3.histogram()
         .domain(y.domain())
-        .thresholds(y.ticks(20))    
+        .thresholds(y.ticks(10))    
         .value(d => d)
+    var sumstat = d3.nest()
+        .key(function(d) { return d.Month;})
+        .rollup(function(d) {   // For each key..
+          var input = d.map(function(g) { return g.Reading;})    // Keep the variable called Sepal_Length
+          var bins = histogram(input)   // And compute the binning on it.
+          return(bins)
+        })
+        .entries(filteredData)
+    console.log("sumstat",sumstat)
+    var maxNum = 0
+    for ( let i in sumstat ){
+          var allBins = sumstat[i].value
+          var lengths = allBins.map(function(a){return a.length;})
+          var longest = d3.max(lengths)
+          if (longest > maxNum) { maxNum = longest }
+        }
+    var xNum = d3.scaleLinear()
+        .range([0, x.bandwidth()])
+        .domain([-maxNum,maxNum])
+    violinSvg
+        .selectAll("myViolin")
+        .data(sumstat)
+        .enter()        // So now we are working group per group
+        .append("g")
+          .attr("transform", function(d){ return("translate(" + x(d.key) +" ,0)") } ) // Translation on the right to be at the group position
+        .append("path")
+            .datum(function(d){ return(d.value)})     // So now we are working bin per bin
+            .style("stroke", "none")
+            .style("fill","#69b3a2")
+            .attr("d", d3.area()
+                .x0(function(d){ return(xNum(-d.length)) } )
+                .x1(function(d){ return(xNum(d.length)) } )
+                .y(function(d){ return(y(d.x0)) } )
+                .curve(d3.curveCatmullRom)    // This makes the line smoother to give the violin appearance. Try d3.curveStep to see the difference
+            )
 }
