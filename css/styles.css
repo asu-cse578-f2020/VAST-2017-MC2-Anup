@@ -8,8 +8,8 @@ input {
 svg {
   border:1px solid gray;
   border-radius:10px;
-  height:600px;
-  width:600px;
+  /* height:600px;
+  width:600px; */
   margin:5px;
 }
 #linechart {
@@ -27,4 +27,32 @@ html {
 
 h2, h3 {
   text-align:center;
+}
+
+#heatmap{
+  width: 100%;
+  height: 100%;
+  border:1px solid gray;
+  border-radius:10px;
+  margin:5px;
+}
+.month {
+  margin-right: 8px;
+  margin-left: 8px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+
+}
+.month-name {
+  font-size: 85%;
+  fill: #777;
+  font-family: Arial, Helvetica;
+}
+.day.hover {
+  stroke: #6d6E70;
+  stroke-width: 2;
+}
+.day.focus {
+  stroke: #ffff33;
+  stroke-width: 2;
 }
