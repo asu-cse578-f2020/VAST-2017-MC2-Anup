@@ -30,11 +30,15 @@ h2, h3 {
 }
 
 #heatmap{
-  width: 50%;
-  height: 50%;
+  width: 550px;
+  height: 400px;
   border:1px solid gray;
   border-radius:10px;
   margin:5px;
+  padding: 10px;
+}
+#heatMapSvg{
+  padding: 10px 10px 10px 10px;
 }
 .month {
   margin-right: 8px;
@@ -55,4 +59,15 @@ h2, h3 {
 .day.focus {
   stroke: #ffff33;
   stroke-width: 2;
+}
+.tooltip {  
+  position: absolute;
+  text-align: left;
+  padding: .5rem;
+  background: #FFFFFF;
+  color: #313639;
+  border: 1px solid #313639;
+  border-radius: 8px;
+  pointer-events: none;
+  font-size: 1.1rem;
 }
