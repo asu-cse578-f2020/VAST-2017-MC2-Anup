@@ -3,6 +3,8 @@ var scatterPlotMargin = { top: 10, right: 40, bottom: 40, left: 60 }
 var scatterPlotWidth = 400 - scatterPlotMargin.left - scatterPlotMargin.right;
 var scatterPlotHeight = 320 - scatterPlotMargin.top - scatterPlotMargin.bottom;
 
+var symbol = d3.symbol().size(150);
+
 var scatterPlotSvg = d3.select("#innovative_dataviz")
     .append("svg")
     .attr("width", scatterPlotWidth + scatterPlotMargin.left + scatterPlotMargin.right)
@@ -12,13 +14,18 @@ var scatterPlotSvg = d3.select("#innovative_dataviz")
         "translate(" + scatterPlotMargin.left + "," + scatterPlotMargin.top + ")");;
 
 d3.select("#innovative_dataviz").append("input")
-.attr("class", "playPause")
-.attr("type","button")
-.attr("value", "Start")
-.attr("onClick","toggleAnimation()");
+    .attr("class", "playPause")
+    .attr("type", "button")
+    .attr("value", "Start")
+    .attr("onClick", "toggleAnimation()");
 
 compass = d3.select("#innovative_dataviz").select("svg").append("g")
-.attr("transform", "translate("+0 +","+(scatterPlotHeight+100)+")")
+    .attr("transform", "translate(" + 0 + "," + (scatterPlotHeight + 100) + ")")
+
+var tooltip = d3.select("body")
+    .append("div")
+    .attr('class', 'tooltip')
+    .style("opacity", 0);
 
 // data
 var data;
@@ -46,13 +53,12 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function drawInitialViz() {
-    drawScatterPlot()
     loadData()
 }
 
 function loadData() {
     Promise.all([d3.csv('data/sensor_locations.csv'),
-                 d3.csv('data/windData.csv')]).then(function (values) {
+    d3.csv('data/windData.csv')]).then(function (values) {
         data = values[0]
         windData = values[1];
 
@@ -64,7 +70,8 @@ function loadData() {
             return +d["y"];
         })]);
 
-        drawCircles()
+        // drawCircles()
+        drawScatterPlot()
         drawCompass([windData[ind]])
     });
 }
@@ -111,24 +118,28 @@ function drawScatterPlot() {
         .attr("font-weight", 400)
         .text("Y");
 
-    gDots = scatterPlotSvg.append("g")
-    // Add dots
-    drawCircles()
-}
+    var shape = d3.scaleOrdinal(data.map(d => d.type), d3.symbols.map(s => symbol.type(s)()))
 
-function drawCircles() {
-    gDots.selectAll('g')
+    scatterPlotSvg.append("g")
+        .attr("stroke-width", 1.5)
+        .attr("font-family", "sans-serif")
+        .attr("font-size", 10)
+        .selectAll("path")
         .data(data)
-        .join(
-            enter => enterCircles(enter, t),
-            update => updateCircles(update, t),
-            exit => exitCircles(exit, t)
-        )
+        .join("path")
+        .attr("transform", d => `translate(${x(d.x)},${y(d.y)})`)
+        .attr("fill", d => colorScale(d.type))
+        .attr("d", d => shape(d.type));
 
-    gDots.selectAll('circle')
+    scatterPlotSvg.selectAll('path')
         .on('mouseover', function (d, i) {
+            var displayText = d.name;
+            if (d.type == 'sensor') {
+                displayText = "Sensor " + displayText
+            }
+
             tooltip.style("opacity", 1);
-            tooltip.html(d.country)
+            tooltip.html(displayText)
                 .style("left", (d3.event.pageX + 10) + "px")
                 .style("top", (d3.event.pageY - 15) + "px");
         })
@@ -137,73 +148,9 @@ function drawCircles() {
         })
 }
 
-function enterCircles(enter, t) {
-    enter.append('g')
-        .call(g =>
-            g
-                .append("circle")
-                .attr("class", "circles")
-                .attr("r", 18)
-                .transition(t)
-                .attr("cx", function (d) { return x(d.x); })
-                .attr("cy", function (d) { return y(d.y); })
-                .style("fill", function (d) { return colorScale(d.x + "," + d.y) })
-                .attr('stroke', '#000000')
-                .attr('stroke-width', 1)
-                .attr("opacity", 0.8)
-        )
-        .call(g =>
-            g.append('text')
-                .style('fill', 'black')
-                .attr("text-anchor", "middle")
-                .transition(t)
-                .text(function (d) {
-                    return d.index;
-                })
-                .attr("x", function (d) {
-                    return x(d.x);
-                })
-                .attr("y", function (d) {
-                    return y(d.y);
-                })
-        )
-}
+function drawCompass(compassData) {
 
-function updateCircles(update, t) {
-    update
-        .call(g => g.select('text')
-            .attr("text-anchor", "middle")
-            .transition(t)
-            .text(function (d) {
-                return d.index;
-            })
-            .attr("x", function (d) {
-                return x(d.x);
-            })
-            .attr("y", function (d) {
-                return y(d.y);
-            })
-        )
-        .call(g => g.select('circle')
-            .transition(t)
-            .attr("cx", function (d) { return x(d.x); })
-            .attr("cy", function (d) { return y(d.y); })
-        )
-}
-
-function exitCircles(exit, t) {
-    exit
-        .call(exit => exit
-            .transition()
-            .duration(200)
-            .ease(d3.easeCubic)
-            .attr("r", 0)
-            .remove())
-}
-
-function drawCompass(compassData){
-
-  compass.selectAll('g')
+    compass.selectAll('g')
         .data(compassData)
         .join(
             enter => enterCompass(enter, t),
@@ -215,76 +162,76 @@ function updateCompass(update, t) {
 
     update.select('#speed')
         .attr("text-anchor", "middle")
-        .text(d=> "Wind Speed:" + d.speed)
+        .text(d => "Wind Speed:" + d.speed)
 
     update.select('#direction')
         .attr("text-anchor", "middle")
-        .text(d=> "Wind direction:" + d.direction)
-        
+        .text(d => "Wind direction:" + d.direction)
+
     update.select("line")
-    .transition()
-    .duration(500)
-    .attr('transform',d => 'rotate('+ d.direction + ' 100 100)')
-    .end()
-    .then(circleTransitions);
+        .transition()
+        .duration(500)
+        .attr('transform', d => 'rotate(' + d.direction + ' 100 100)')
+        .end()
+        .then(circleTransitions);
 }
 
 function enterCompass(enter, t) {
     glyph = enter.append('g')
-        
+
     glyph.append("circle")
         .attr("transform", "translate(100,100)")
-        .attr("r",50)
-        .attr("stroke","black")
+        .attr("r", 50)
+        .attr("stroke", "black")
         .attr("fill", "white")
 
     glyph.append("text")
-    .attr("transform", "translate(100,90)")
-    .attr("id", "speed")
-    .style("text-anchor", "middle")
-    .style("font-size", "8px") 
-    .style("font-weight", "700")
-    .style("font-family", "sans-serif")
-    .style("fill", "gray")
-    .style("opacity", 0.5)
-    .text(d=> "Wind Speed:" + d.speed)
+        .attr("transform", "translate(100,90)")
+        .attr("id", "speed")
+        .style("text-anchor", "middle")
+        .style("font-size", "8px")
+        .style("font-weight", "700")
+        .style("font-family", "sans-serif")
+        .style("fill", "gray")
+        .style("opacity", 0.5)
+        .text(d => "Wind Speed:" + d.speed)
 
     glyph.append("text")
-    .attr("transform", "translate(100,110)")
-    .attr("id", "direction")
-    .style("text-anchor", "middle")
-    .style("font-size", "8px") 
-    .style("font-weight", "700")
-    .style("font-family", "sans-serif")
-    .style("fill", "gray")
-    .style("opacity", 0.5)
-    .text(d=> "Wind direction:" + d.direction)
-    
+        .attr("transform", "translate(100,110)")
+        .attr("id", "direction")
+        .style("text-anchor", "middle")
+        .style("font-size", "8px")
+        .style("font-weight", "700")
+        .style("font-family", "sans-serif")
+        .style("fill", "gray")
+        .style("opacity", 0.5)
+        .text(d => "Wind direction:" + d.direction)
+
     glyph.append("svg:defs").append("svg:marker")
-    .attr("id", "triangle")
-    .attr("refX", 6)
-    .attr("refY", 6)
-    .attr("markerWidth", 30)
-    .attr("markerHeight", 30)
-    .attr("markerUnits","userSpaceOnUse")
-    .attr("orient", "auto")
-    .append("path")
-    .attr("d", "M 0 0 20 6 0 12 3 6")
-    .style("fill", "black")
+        .attr("id", "triangle")
+        .attr("refX", 6)
+        .attr("refY", 6)
+        .attr("markerWidth", 30)
+        .attr("markerHeight", 30)
+        .attr("markerUnits", "userSpaceOnUse")
+        .attr("orient", "auto")
+        .append("path")
+        .attr("d", "M 0 0 20 6 0 12 3 6")
+        .style("fill", "black")
 
     glyph.append('line')
-    .attr('class', 'gaugeChart-needle')
-    .attr("x1", 100)
-    .attr("y1", 145)
-    .attr("x2", 100)
-    .attr("y2", 70)
-    .attr('stroke-width', 1)
-    .attr("stroke","black")
-    .attr("marker-end", "url(#triangle)")
-    .attr('transform',d => 'rotate('+ d.direction + ' 100 100)')
+        .attr('class', 'gaugeChart-needle')
+        .attr("x1", 100)
+        .attr("y1", 145)
+        .attr("x2", 100)
+        .attr("y2", 70)
+        .attr('stroke-width', 1)
+        .attr("stroke", "black")
+        .attr("marker-end", "url(#triangle)")
+        .attr('transform', d => 'rotate(' + d.direction + ' 100 100)')
 }
 
-function stopAnimation(){
+function stopAnimation() {
     d3.select('.playPause').attr('value', "Start");
 }
 
@@ -296,12 +243,12 @@ function toggleAnimation() {
 }
 
 function circleTransitions() {
-    
-    if(d3.select('.playPause').attr('value') == 'Stop' && ind < windData.length-1) {
-        ind = ind+1;
+
+    if (d3.select('.playPause').attr('value') == 'Stop' && ind < windData.length - 1) {
+        ind = ind + 1;
         drawCompass([windData[ind]]);
     }
-    else if (ind == windData.length-1){
+    else if (ind == windData.length - 1) {
         ind = 0;
         stopAnimation();
     }
