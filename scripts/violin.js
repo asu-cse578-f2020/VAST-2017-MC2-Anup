@@ -15,6 +15,8 @@ function drawViolinPlot(data,Chemical)
          d.Month = new Date(d.DateTime);
          d.Month = months[d.Month.getMonth()];
     });
+    
+    filteredData= outliers(filteredData)
     console.log("vioilin data",filteredData)
     //now getting min and max of reading values
     var maxReading = d3.max(filteredData,function(d){return d.Reading})
@@ -27,12 +29,12 @@ function drawViolinPlot(data,Chemical)
                     .attr("height", height + margin.top + margin.bottom)
                     .append("g")
                     .attr("transform",
-                          "translate(" + margin.left + "," + margin.top + ")");
+                          "translate(" + (margin.left+margin.top) + "," + margin.top + ")");
     //y axis
-    var y = d3.scaleLinear()
+    var y = d3.scaleLog()
                 .domain([minReading,maxReading])        
                 .range([height, 0]);
-    violinSvg.append("g").call(d3.axisLeft(y));
+    violinSvg.append("g").call(d3.axisLeft(y).ticks(10,".2n"));
 
     //x-axis
     var x = d3.scaleBand()
@@ -82,4 +84,16 @@ function drawViolinPlot(data,Chemical)
                 .y(function(d){ return(y(d.x0)) } )
                 .curve(d3.curveCatmullRom)    // This makes the line smoother to give the violin appearance. Try d3.curveStep to see the difference
             )
+}
+function outliers(filteredData)
+{
+    filteredData.sort(function(a,b){
+        return a.Reading-b.Reading
+    })
+    //console.log("sorted",filteredData)
+    var l = filteredData.length;
+    var low = Math.round(l * 0.025);
+    var high = l - low;
+    var data2 = filteredData.slice(low,high);
+    return data2
 }
