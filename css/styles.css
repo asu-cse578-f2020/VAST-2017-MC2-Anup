@@ -71,3 +71,21 @@ h2, h3 {
   pointer-events: none;
   font-size: 1.1rem;
 }
+.playPause{
+  visibility: visible;
+  background-color: gray;
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+  border-radius: 20%;
+  border: 1px solid black;
+  transition-duration: 0.4s; 
+  cursor: pointer;
+}
+.playPause:hover {
+  background-color: white;
+  color: black;
+}

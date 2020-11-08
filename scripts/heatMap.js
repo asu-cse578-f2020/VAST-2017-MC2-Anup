@@ -156,7 +156,7 @@ function drawCalender(data){
 		.filter(function(d) { 
 			return d in reading; 
 		})
-		.style("fill", function(d) { return d3.interpolateYlGn(scale(reading[d])); })
+		.style("fill", function(d) { return d3.interpolatePuBu(scale(reading[d])); })
 		.on("mouseover", function(d) {
 			d3.select(this)
 				.style('stroke', 'black')
