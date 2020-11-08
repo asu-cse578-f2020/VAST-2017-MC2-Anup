@@ -93,6 +93,24 @@ function drawViolinPlot(data,Chemical)
             .attr("y2", function(d){return(y(d.value.median))})
             .attr("stroke", "black")
             .style("width", 80)
+    violinSvg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - margin.left)
+        .attr("x",0 - (height / 2))
+        .attr("dy", "8px")
+        .style("font-weight", "700")
+        .style("font-size", "12px")
+        .attr("font-family","sans-serif")
+        .style("text-anchor", "middle")
+        .text("Chemical Reading Value");
+    violinSvg.append("text")
+        .attr("transform", "translate(" + (width / 2) + " ," + (height - (margin.bottom -75)) + ")")
+        .style("text-anchor", "middle")
+        .style("font-weight", "700" )
+        .style("font-size", "12px")
+        .attr("font-family","sans-serif")
+        .text("Months");
+
 }
 function outliers(filteredData)
 {
