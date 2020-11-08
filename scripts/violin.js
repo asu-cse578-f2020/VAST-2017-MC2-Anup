@@ -34,7 +34,7 @@ function drawViolinPlot(data,Chemical)
     var y = d3.scaleLog()
     .domain([minReading,maxReading])
     .range([height, 0])
-    violinSvg.append("g").call(d3.axisLeft(y).ticks(11,".2n"))
+    violinSvg.append("g").call(d3.axisLeft(y).ticks(11,".1n"))
 
     //x-axis
     var x = d3.scaleBand()
