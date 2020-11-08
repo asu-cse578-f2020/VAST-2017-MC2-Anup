@@ -88,4 +88,10 @@ h2, h3 {
 .playPause:hover {
   background-color: white;
   color: black;
+  
+.tooltip {
+  position: absolute;
+  width: 100px;
+  height: 20px;
+  pointer-events: none;
 }
