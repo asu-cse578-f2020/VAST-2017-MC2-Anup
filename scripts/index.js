@@ -27,12 +27,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Load the innovative vis (the first vis)
   });
 
-  // On factory change call heat map with new heat map
+  // On factory change call heat map for new factory
   d3.select('#factory').on('change', function(){
     drawHeatMap (completeData);
   });
 
-  // On chemical change call heat map with new heat map
+  // On chemical change call heat map for new chemical
   d3.select('#chemical').on('change', function(){
     drawHeatMap (completeData);
   });

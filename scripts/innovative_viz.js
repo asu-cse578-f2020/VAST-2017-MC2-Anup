@@ -1,7 +1,7 @@
 var scatterPlotMargin = { top: 10, right: 40, bottom: 40, left: 60 }
 
-var scatterPlotWidth = 400 - scatterPlotMargin.left - scatterPlotMargin.right;
-var scatterPlotHeight = 320 - scatterPlotMargin.top - scatterPlotMargin.bottom;
+var scatterPlotWidth = 600 - scatterPlotMargin.left - scatterPlotMargin.right;
+var scatterPlotHeight = 500 - scatterPlotMargin.top - scatterPlotMargin.bottom;
 
 var symbol = d3.symbol().size(150);
 
