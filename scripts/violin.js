@@ -45,7 +45,11 @@ function drawViolinPlot(data,Chemical)
   violinSvg.append("g")
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(x))
-   
+    var tooltip = d3.select("body")
+                    .append("div")
+                    .attr("class", "tooltip")
+                    .style("opacity", 0);
+
     var sumstat = d3.nest() // nest function allows to group the calculation per level of a factor
         .key(function(d) { return d.Month;})
         .rollup(function(d) {
@@ -82,6 +86,32 @@ function drawViolinPlot(data,Chemical)
             .attr("width", boxWidth )
             .attr("stroke", "black")
             .style("fill", "#69b3a2")
+            .on("mouseover", function(d)
+            {
+                tooltip.transition()
+				.duration(50)
+				.style("opacity", 1);
+
+			    tooltip.html("Median: "+d.value.median)
+				.style("left", (d3.event.pageX) + "px")
+				.style("top", (d3.event.pageY) + "px");
+            })
+            .on("mousemove", function(d)
+            {
+                tooltip.transition()
+				.duration(50)
+				.style("opacity", 1);
+
+			    tooltip.html("Median: "+d.value.median)
+				.style("left", (d3.event.pageX) + "px")
+				.style("top", (d3.event.pageY) + "px");
+            })
+            .on("mouseout", function(d)
+            {
+                tooltip.transition()
+				.duration(50)
+                .style("opacity", 0);
+            })
     violinSvg
         .selectAll("medianLines")
         .data(sumstat)
