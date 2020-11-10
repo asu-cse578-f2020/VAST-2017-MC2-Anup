@@ -3,7 +3,7 @@ export {drawViolinPlot}
 var violinSvg;
 var filteredData;
 var months=["January", "February", "March", "April", "May","June","July", "August", "September", "October", "November","December"];
-var margin = {top: 10, right: 30, bottom: 30, left: 40};
+var margin = {top: 10, right: 30, bottom: 50, left: 40};
 var width = 460 - margin.left - margin.right;
 var height = 400 - margin.top - margin.bottom;
 function drawViolinPlot(data,Chemical)
@@ -104,7 +104,7 @@ function drawViolinPlot(data,Chemical)
         .style("text-anchor", "middle")
         .text("Chemical Reading Value");
     violinSvg.append("text")
-        .attr("transform", "translate(" + (width / 2) + " ," + (height - (margin.bottom -75)) + ")")
+        .attr("transform", "translate(" + (width / 2) + " ," + (height - (margin.bottom -85)) + ")")
         .style("text-anchor", "middle")
         .style("font-weight", "700" )
         .style("font-size", "12px")
