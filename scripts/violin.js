@@ -17,11 +17,11 @@ function drawViolinPlot(data,Chemical)
     });
     
     filteredData= outliers(filteredData)
-    console.log("vioilin data",filteredData)
+    // console.log("vioilin data",filteredData)
     //now getting min and max of reading values
     var maxReading = d3.max(filteredData,function(d){return d.Reading})
     var minReading = d3.min(filteredData,function(d){return d.Reading})
-    console.log("max and min", maxReading,minReading)
+    // console.log("max and min", maxReading,minReading)
     //svg declaration
     violinSvg = d3.select("#violin")
                     .append("svg")

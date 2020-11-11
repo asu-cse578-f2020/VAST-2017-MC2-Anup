@@ -6,6 +6,9 @@ let data
 
 
 let svg = d3.select("#linechart")
+    .append("div")
+    .style("float","left")
+    .style("width", "10%")
     .append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)

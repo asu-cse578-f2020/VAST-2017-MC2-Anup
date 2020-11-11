@@ -15,12 +15,18 @@ svg {
 #linechart {
   border: 1px solid black;
   border-radius: 10px;
-  height: 600px;
+  height: 500px;
   width: 800px;
   margin: 5px;
   text-align: center;
 }
-
+.lineChartColorText{
+  float: right;
+  width: 40%;
+  vertical-align: middle;
+  top: 30%;
+  position: relative;
+}
 html {
   font-family: 'Trebuchet MS', sans-serif;
 }
