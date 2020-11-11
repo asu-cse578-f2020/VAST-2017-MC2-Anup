@@ -27,9 +27,9 @@ svg {
   top: 30%;
   position: relative;
 }
-#linechart p:hover{
+#linechart .lineChartColorText p:hover{
   cursor: pointer;
-  opacity: 0.5;
+  opacity: 0.4;
 }
 
 html {

@@ -15,6 +15,12 @@ let svg = d3.select("#linechart")
     .append("g")
     .attr("transform","translate(" + margin.left + "," + margin.top + ")");
 
+var tooltip = d3.select("#linechart")
+                .append("div")
+                .attr("class", "tooltip")
+                .style("opacity", 0);
+
+
 
 document.addEventListener("DOMContentLoaded", async function () {
     let values = await Promise.all([
@@ -57,8 +63,7 @@ function draw() {
             return yScale(+d.Reading); 
         })
         .curve(d3.curveBasis);
-
-
+    
     let AGOC_3A_data = []
     let Appluimonia_data = []
     let Chlorodinine_data = []
@@ -81,21 +86,99 @@ function draw() {
         .attr('stroke', 'green')
         .attr('stroke-width', 3)
         .attr('fill', 'none')
-        .attr("id", "line-AGOC3A");
+        .attr("id", "line-AGOC3A")
+        .on('mouseover', function (d, i, j) {
+            const monthNames = ["January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+            ];
+
+            var coords = d3.mouse(this);
+            var newData= {
+                x:  xScale.invert(coords[0]),  
+                y: yScale.invert(coords[1])
+            };
+            d3.select("#line-AGOC3A").transition()
+            .duration('150')
+            .attr('cursor', 'pointer')
+            tooltip.transition()
+            .duration(50)
+            .style("opacity", 1);
+            tooltip.html("Chemical: " +"Agoc 3A" + "<br>Date: "+monthNames[newData.x.getMonth()-1] +"<br>Reading: "+newData.y)
+            .style("left", (d3.event.pageX) + "px")
+            .style("top", (d3.event.pageY) + "px");
+    
+        })
+        .on('mouseout', function (d, i) {
+            tooltip.transition()
+				.duration(50)
+                .style("opacity", 0);
+        });
 
     svg.append('svg:path')
         .attr('d', lineGen(Appluimonia_data))
         .attr('stroke', 'blue')
         .attr('stroke-width', 3)
         .attr('fill', 'none')
-        .attr("id", "line-APPLUIMONIA");
+        .attr("id", "line-APPLUIMONIA")
+        .on('mouseover', function (d, i, j) {
+            const monthNames = ["January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+            ];
+
+            var coords = d3.mouse(this);
+            var newData= {
+                x:  xScale.invert(coords[0]),  
+                y: yScale.invert(coords[1])
+            };
+            d3.select("#line-APPLUIMONIA").transition()
+            .duration('150')
+            .attr('cursor', 'pointer')
+            tooltip.transition()
+            .duration(50)
+            .style("opacity", 1);
+            tooltip.html("Chemical: " +"Appluimonia" + "<br>Date: "+monthNames[newData.x.getMonth()-1] +"<br>Reading: "+newData.y)
+            .style("left", (d3.event.pageX) + "px")
+            .style("top", (d3.event.pageY) + "px");
+    
+        })
+        .on('mouseout', function (d, i) {
+            tooltip.transition()
+				.duration(50)
+                .style("opacity", 0);
+        });
 
     svg.append('svg:path')
         .attr('d', lineGen(Chlorodinine_data))
         .attr('stroke', 'red')
         .attr('stroke-width', 3)
         .attr('fill', 'none')
-        .attr("id", "line-CHLORODININE");
+        .attr("id", "line-CHLORODININE")
+        .on('mouseover', function (d, i, j) {
+            const monthNames = ["January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+            ];
+
+            var coords = d3.mouse(this);
+            var newData= {
+                x:  xScale.invert(coords[0]),  
+                y: yScale.invert(coords[1])
+            };
+            d3.select("#line-CHLORODININE").transition()
+            .duration('150')
+            .attr('cursor', 'pointer')
+            tooltip.transition()
+            .duration(50)
+            .style("opacity", 1);
+            tooltip.html("Chemical: " +"Chlorodinine" + "<br>Date: "+monthNames[newData.x.getMonth()-1] +"<br>Reading: "+newData.y)
+            .style("left", (d3.event.pageX) + "px")
+            .style("top", (d3.event.pageY) + "px");
+    
+        })
+        .on('mouseout', function (d, i) {
+            tooltip.transition()
+				.duration(50)
+                .style("opacity", 0);
+        });
 
     svg.append('svg:path')
         .attr('d', lineGen(Methylosmolene_data))
@@ -103,6 +186,32 @@ function draw() {
         .attr('stroke-width', 3)
         .attr('fill', 'none')
         .attr("id", "line-METHYLOSMOLENE")
+        .on('mouseover', function (d, i, j) {
+            const monthNames = ["January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+            ];
+            var coords = d3.mouse(this);
+            var newData= {
+                x:  xScale.invert(coords[0]),  
+                y: yScale.invert(coords[1])
+            };
+            d3.select("#line-METHYLOSMOLENE").transition()
+            .duration('150')
+            .attr('cursor', 'pointer')
+            tooltip.transition()
+            .duration(50)
+            .style("opacity", 1);
+            tooltip.html("Chemical: " +"Methylosmolene" + "<br>Date: "+monthNames[newData.x.getMonth()-1] +"<br>Reading: "+newData.y)
+            .style("left", (d3.event.pageX) + "px")
+            .style("top", (d3.event.pageY) + "px");
+    
+        })
+        .on('mouseout', function (d, i) {
+            tooltip.transition()
+				.duration(50)
+                .style("opacity", 0);
+        });
+        
 }
 
 
@@ -117,7 +226,6 @@ svg.append("text")
     .attr("y", 380)
     .attr("dy", ".75em")
     .attr("transform", "rotate(0)")
-
     .text("Time");
 
 svg.append("text")
@@ -141,7 +249,8 @@ svg.append("text")
     .style("font-weight", "bold") 
     .style("font-family", "sans-serif") 
     .style("text-decoration", "underline")  
-    .text("Chemical Readings vs Time");
+    .text("Chemical Readings vs Time");    
+
 
 
 document.getElementById("text-AGOC3A").addEventListener('click',function (){
@@ -168,9 +277,9 @@ document.getElementById("text-APPLUIMONIA").addEventListener('click',function ()
         appluimoniaLine.style.visibility = 'hidden';
         appluimoniaText.style.opacity = 0.2;
      }
- }); 
+}); 
 
- document.getElementById("text-CHLORODININE").addEventListener('click',function (){
+document.getElementById("text-CHLORODININE").addEventListener('click',function (){
     var chlorodinineLine = document.getElementById('line-CHLORODININE');
     var chlorodinineText = document.getElementById('text-CHLORODININE');
     if (chlorodinineLine.style.visibility === 'hidden' ){ 
@@ -181,9 +290,9 @@ document.getElementById("text-APPLUIMONIA").addEventListener('click',function ()
         chlorodinineLine.style.visibility = 'hidden';
         chlorodinineText.style.opacity = 0.2;
      }
- }); 
+}); 
 
- document.getElementById("text-METHYLOSMOLENE").addEventListener('click',function (){
+document.getElementById("text-METHYLOSMOLENE").addEventListener('click',function (){
     var methylosmoleneLine = document.getElementById('line-METHYLOSMOLENE');
     var methylosmoleneText = document.getElementById('text-METHYLOSMOLENE');
     if (methylosmoleneLine.style.visibility === 'hidden' ){ 
@@ -194,4 +303,8 @@ document.getElementById("text-APPLUIMONIA").addEventListener('click',function ()
         methylosmoleneLine.style.visibility = 'hidden';
         methylosmoleneText.style.opacity = 0.2;
      }
- }); 
+}); 
+
+// document.getElementById("line-CHLORODININE").addEventListener('mouseover',function (){
+//     console.log('hover');
+// });
