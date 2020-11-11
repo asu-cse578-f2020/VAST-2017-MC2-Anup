@@ -80,25 +80,29 @@ function draw() {
         .attr('d', lineGen(AGOC_3A_data))
         .attr('stroke', 'green')
         .attr('stroke-width', 3)
-        .attr('fill', 'none');
+        .attr('fill', 'none')
+        .attr("id", "line-AGOC3A");
 
     svg.append('svg:path')
         .attr('d', lineGen(Appluimonia_data))
         .attr('stroke', 'blue')
         .attr('stroke-width', 3)
-        .attr('fill', 'none');
+        .attr('fill', 'none')
+        .attr("id", "line-APPLUIMONIA");
 
     svg.append('svg:path')
         .attr('d', lineGen(Chlorodinine_data))
         .attr('stroke', 'red')
         .attr('stroke-width', 3)
-        .attr('fill', 'none');
+        .attr('fill', 'none')
+        .attr("id", "line-CHLORODININE");
 
     svg.append('svg:path')
         .attr('d', lineGen(Methylosmolene_data))
         .attr('stroke', 'orange')
         .attr('stroke-width', 3)
         .attr('fill', 'none')
+        .attr("id", "line-METHYLOSMOLENE")
 }
 
 
@@ -138,3 +142,56 @@ svg.append("text")
     .style("font-family", "sans-serif") 
     .style("text-decoration", "underline")  
     .text("Chemical Readings vs Time");
+
+
+document.getElementById("text-AGOC3A").addEventListener('click',function (){
+   var agocLine = document.getElementById('line-AGOC3A');
+   var agocText = document.getElementById('text-AGOC3A');
+   if (agocLine.style.visibility === 'hidden' ){ 
+        agocLine.style.visibility = 'visible';
+        agocText.style.opacity = 1;
+   }
+    else {
+        agocLine.style.visibility = 'hidden';
+        agocText.style.opacity = 0.2;
+    }
+}); 
+
+document.getElementById("text-APPLUIMONIA").addEventListener('click',function (){
+    var appluimoniaLine = document.getElementById('line-APPLUIMONIA');
+    var appluimoniaText = document.getElementById('text-APPLUIMONIA');
+    if (appluimoniaLine.style.visibility === 'hidden' ){ 
+        appluimoniaLine.style.visibility = 'visible';
+        appluimoniaText.style.opacity = 1;
+    }
+     else {
+        appluimoniaLine.style.visibility = 'hidden';
+        appluimoniaText.style.opacity = 0.2;
+     }
+ }); 
+
+ document.getElementById("text-CHLORODININE").addEventListener('click',function (){
+    var chlorodinineLine = document.getElementById('line-CHLORODININE');
+    var chlorodinineText = document.getElementById('text-CHLORODININE');
+    if (chlorodinineLine.style.visibility === 'hidden' ){ 
+        chlorodinineLine.style.visibility = 'visible';
+        chlorodinineText.style.opacity = 1;
+    }
+     else {
+        chlorodinineLine.style.visibility = 'hidden';
+        chlorodinineText.style.opacity = 0.2;
+     }
+ }); 
+
+ document.getElementById("text-METHYLOSMOLENE").addEventListener('click',function (){
+    var methylosmoleneLine = document.getElementById('line-METHYLOSMOLENE');
+    var methylosmoleneText = document.getElementById('text-METHYLOSMOLENE');
+    if (methylosmoleneLine.style.visibility === 'hidden' ){ 
+        methylosmoleneLine.style.visibility = 'visible';
+        methylosmoleneText.style.opacity = 1;
+    }
+     else {
+        methylosmoleneLine.style.visibility = 'hidden';
+        methylosmoleneText.style.opacity = 0.2;
+     }
+ }); 
