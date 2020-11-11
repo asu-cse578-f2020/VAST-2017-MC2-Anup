@@ -103,11 +103,11 @@ function draw() {
 svg.append("text")
     .attr("class", "x label")
     .attr("text-anchor", "end")
-    .attr("x", -150)
+    .attr("x", width-200)
     .style("font-size", "14px") 
     .style("font-weight", "bold")
     .style("font-family", "sans-serif")  
-    .attr("y", -40)
+    .attr("y", 380)
     .attr("dy", ".75em")
     .attr("transform", "rotate(0)")
 
