@@ -1,6 +1,5 @@
 /* index.js */
 import {drawHeatMap} from './heatMap.js';
-import { drawViolinPlot } from './violin.js';
 
 var lineWidth;
 var lineHeight;
@@ -23,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
     completeData = values[0];
     sensorData= values[1];
     drawHeatMap (completeData);
-    drawViolinPlot(sensorData,'Chlorodinine') //placeholder to pass data
+     //placeholder to pass data
     // Load the innovative vis (the first vis)
   });
 

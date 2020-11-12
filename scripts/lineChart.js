@@ -1,8 +1,10 @@
+import { drawViolinPlot } from './violin.js'
 let margin = {top: 10, right: 30, bottom: 30, left: 60}
 let width = 460 - margin.left - margin.right
 let height = 400 - margin.top - margin.bottom
 const timeConv = d3.timeParse("%Y-%m-%d");
 let data
+var sensorData
 let hidden = {
     'AGOC 3A' : false,
     'Appluimonia' : false,
@@ -31,9 +33,10 @@ var tooltip = d3.select("#linechart")
 document.addEventListener("DOMContentLoaded", async function () {
     let values = await Promise.all([
         d3.csv("./data/processed_sensor_data_line_chart.csv"),
+        d3.csv('../data/sensor_data.csv')
     ]);
     data = values[0]
-    
+    sensorData = values[1]
     var month = document.getElementById("months-linechart").value;
 
     draw(month)
@@ -145,7 +148,7 @@ function draw(monthName) {
                 .style("opacity", 0);
         })
         .on("click", function(d) { 
-            console.log('Chemical Agoc 3A');
+            drawViolinPlot(sensorData,'AGOC-3A')
         });
 
     svg.append('svg:path')
@@ -181,7 +184,7 @@ function draw(monthName) {
                 .style("opacity", 0);
         })
         .on("click", function(d) { 
-            console.log('Chemical Appluimonia');
+            drawViolinPlot(sensorData,'Appluimonia')
         });
 
     svg.append('svg:path')
@@ -217,7 +220,7 @@ function draw(monthName) {
                 .style("opacity", 0);
         })
         .on("click", function(d) { 
-            console.log('Chemical Chlorodinine');
+            drawViolinPlot(sensorData,'Chlorodinine')
         });
 
     svg.append('svg:path')
@@ -252,7 +255,7 @@ function draw(monthName) {
                 .style("opacity", 0);
         })
         .on("click", function(d) { 
-            console.log('Chemical Methylosmolene');
+            drawViolinPlot(sensorData,'Methylosmolene')
         });
 
 
