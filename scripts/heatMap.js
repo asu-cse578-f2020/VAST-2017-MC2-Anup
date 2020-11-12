@@ -18,7 +18,7 @@ var div = d3.select("body")
 var chemical, factory;
 var margin = { top: 10, right: 10, bottom: 10, left: 10 }
 var width = 475 - margin.left - margin.right
-var height = 240 - margin.top - margin.bottom
+var height = 250 - margin.top - margin.bottom
 
 function drawHeatMap(data){
 

@@ -1,6 +1,6 @@
 var scatterPlotMargin = { top: 10, right: 40, bottom: 40, left: 60 }
 
-var scatterPlotWidth = 600 - scatterPlotMargin.left - scatterPlotMargin.right;
+var scatterPlotWidth = 1500 - scatterPlotMargin.left - scatterPlotMargin.right;
 var scatterPlotHeight = 500 - scatterPlotMargin.top - scatterPlotMargin.bottom;
 
 var symbol = d3.symbol().size(150);
@@ -145,6 +145,18 @@ function drawScatterPlot() {
         })
         .on('mouseout', function (d, i) {
             tooltip.style("opacity", 0);
+        })
+        .on('click', function (d, i) {
+            if (d.type == 'sensor') {
+                d3.select('#factoryPlots').style('display', 'none');
+                d3.select('#sensorPlots').style('display', '');
+            }
+            else {
+                d3.select('#sensorPlots').style('display', 'none');
+                d3.select('#factoryPlots').style('display', '');
+            }
+
+            window.scrollTo(0, 2000);
         })
 }
 
