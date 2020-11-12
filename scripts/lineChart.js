@@ -143,6 +143,9 @@ function draw(monthName) {
             tooltip.transition()
 				.duration(50)
                 .style("opacity", 0);
+        })
+        .on("click", function(d) { 
+            console.log('Chemical Agoc 3A');
         });
 
     svg.append('svg:path')
@@ -176,6 +179,9 @@ function draw(monthName) {
             tooltip.transition()
 				.duration(50)
                 .style("opacity", 0);
+        })
+        .on("click", function(d) { 
+            console.log('Chemical Appluimonia');
         });
 
     svg.append('svg:path')
@@ -209,6 +215,9 @@ function draw(monthName) {
             tooltip.transition()
 				.duration(50)
                 .style("opacity", 0);
+        })
+        .on("click", function(d) { 
+            console.log('Chemical Chlorodinine');
         });
 
     svg.append('svg:path')
@@ -241,6 +250,9 @@ function draw(monthName) {
             tooltip.transition()
 				.duration(50)
                 .style("opacity", 0);
+        })
+        .on("click", function(d) { 
+            console.log('Chemical Methylosmolene');
         });
 
 
