@@ -18,18 +18,18 @@ svg {
   height: 500px;
   width: 800px;
   margin: 5px;
-  text-align: center;
+  display:flex;
+  flex-direction : row-reverse;
+  justify-content: center;
+  align-items: center;
 }
-.lineChartColorText{
-  float: right;
-  width: 40%;
-  vertical-align: middle;
-  top: 30%;
-  position: relative;
-}
-#linechart .lineChartColorText p:hover{
-  cursor: pointer;
-  opacity: 0.4;
+.color-layout{
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 500px;
+  width: 400px;
+  flex-direction : column;
 }
 
 html {

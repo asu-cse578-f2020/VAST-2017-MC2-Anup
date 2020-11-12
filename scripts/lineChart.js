@@ -7,8 +7,6 @@ let data
 
 let svg = d3.select("#linechart")
     .append("div")
-    .style("float","left")
-    .style("width", "10%")
     .append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
@@ -33,6 +31,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 });
 
 function draw() {
+    console.log(data)
     let xScale = d3.scaleTime()
     .range([ 0, width ])
     .domain(d3.extent(data, function(d) { 
@@ -265,6 +264,17 @@ document.getElementById("text-AGOC3A").addEventListener('click',function (){
         agocText.style.opacity = 0.2;
     }
 }); 
+document.getElementById("text-AGOC3A").addEventListener('mouseover',function (){
+    var agocText = document.getElementById('text-AGOC3A');
+    agocText.style.opacity = 0.4;
+    agocText.style.cursor = 'pointer';
+});
+
+document.getElementById("text-AGOC3A").addEventListener('mouseout',function (){
+    var agocText = document.getElementById('text-AGOC3A');
+    agocText.style.opacity = 1;
+});
+
 
 document.getElementById("text-APPLUIMONIA").addEventListener('click',function (){
     var appluimoniaLine = document.getElementById('line-APPLUIMONIA');
@@ -279,6 +289,18 @@ document.getElementById("text-APPLUIMONIA").addEventListener('click',function ()
      }
 }); 
 
+document.getElementById("text-APPLUIMONIA").addEventListener('mouseover',function (){
+    var appluimoniaText = document.getElementById('text-APPLUIMONIA');
+    appluimoniaText.style.opacity = 0.4;
+    appluimoniaText.style.cursor = 'pointer';
+});
+
+document.getElementById("text-APPLUIMONIA").addEventListener('mouseout',function (){
+    var appluimoniaText = document.getElementById('text-APPLUIMONIA');
+    appluimoniaText.style.opacity = 1;
+});
+
+
 document.getElementById("text-CHLORODININE").addEventListener('click',function (){
     var chlorodinineLine = document.getElementById('line-CHLORODININE');
     var chlorodinineText = document.getElementById('text-CHLORODININE');
@@ -291,6 +313,18 @@ document.getElementById("text-CHLORODININE").addEventListener('click',function (
         chlorodinineText.style.opacity = 0.2;
      }
 }); 
+
+document.getElementById("text-CHLORODININE").addEventListener('mouseover',function (){
+    var chlorodinineText = document.getElementById('text-CHLORODININE');
+    chlorodinineText.style.opacity = 0.4;
+    chlorodinineText.style.cursor = 'pointer';
+});
+
+document.getElementById("text-CHLORODININE").addEventListener('mouseout',function (){
+    var chlorodinineText = document.getElementById('text-CHLORODININE');
+    chlorodinineText.style.opacity = 1;
+});
+
 
 document.getElementById("text-METHYLOSMOLENE").addEventListener('click',function (){
     var methylosmoleneLine = document.getElementById('line-METHYLOSMOLENE');
@@ -305,6 +339,13 @@ document.getElementById("text-METHYLOSMOLENE").addEventListener('click',function
      }
 }); 
 
-// document.getElementById("line-CHLORODININE").addEventListener('mouseover',function (){
-//     console.log('hover');
-// });
+document.getElementById("text-METHYLOSMOLENE").addEventListener('mouseover',function (){
+    var methylosmoleneText = document.getElementById('text-METHYLOSMOLENE');
+    methylosmoleneText.style.opacity = 0.4;
+    methylosmoleneText.style.cursor = 'pointer';
+});
+
+document.getElementById("text-METHYLOSMOLENE").addEventListener('mouseout',function (){
+    var methylosmoleneText = document.getElementById('text-METHYLOSMOLENE');
+    methylosmoleneText.style.opacity = 1;
+});
