@@ -3,6 +3,12 @@ let width = 460 - margin.left - margin.right
 let height = 400 - margin.top - margin.bottom
 const timeConv = d3.timeParse("%Y-%m-%d");
 let data
+let hidden = {
+    'AGOC 3A' : false,
+    'Appluimonia' : false,
+    'Chlorodinine' : false,
+    'Methylosmolene' : false,
+}
 
 
 let svg = d3.select("#linechart")
@@ -27,17 +33,36 @@ document.addEventListener("DOMContentLoaded", async function () {
         d3.csv("./data/processed_sensor_data_line_chart.csv"),
     ]);
     data = values[0]
+    
+    var month = document.getElementById("months-linechart").value;
 
-    draw()
+    draw(month)
 
 });
 
-function draw() {
-    console.log(data)
+function clear() {
+    d3.select(".line-svg").selectAll("*").remove();
+    svg = d3
+      .select(".line-svg")
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
+  }
+
+function draw(monthName) {
+    clear()
+
+    var months = [ 'january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december' ];
+    var month = (months.indexOf(monthName));      
+
     let xScale = d3.scaleTime()
     .range([ 0, width ])
     .domain(d3.extent(data, function(d) { 
-        return timeConv(d.Date) 
+        var xDate =  timeConv(d.Date)
+        if(xDate.getMonth()===month) 
+            return xDate;
     }))
 
     let yScale = d3.scaleLinear()
@@ -69,15 +94,16 @@ function draw() {
     let Appluimonia_data = []
     let Chlorodinine_data = []
     let Methylosmolene_data = []
-
+    console.log(month)
     data.forEach(element => {
-        if (element['Chemical'] == 'AGOC-3A') {
+        var mon = timeConv(element['Date']).getMonth()
+        if (element['Chemical'] == 'AGOC-3A' && month===mon) {
             AGOC_3A_data.push(element)
-        } else if (element['Chemical'] == 'Appluimonia') {
+        } else if (element['Chemical'] == 'Appluimonia' && month===mon) {
             Appluimonia_data.push(element)
-        } else if (element['Chemical'] == 'Chlorodinine') {
+        } else if (element['Chemical'] == 'Chlorodinine' && month===mon) {
             Chlorodinine_data.push(element)
-        } else if (element['Chemical'] == 'Methylosmolene') {
+        } else if (element['Chemical'] == 'Methylosmolene' && month===mon) {
             Methylosmolene_data.push(element)
         }
     })
@@ -104,7 +130,7 @@ function draw() {
             tooltip.transition()
             .duration(50)
             .style("opacity", 1);
-            tooltip.html("Chemical: " +"Agoc 3A" + "<br>Date: "+monthNames[newData.x.getMonth()-1] +"<br>Reading: "+newData.y)
+            tooltip.html("Chemical: " +"Agoc 3A" + "<br>Date: "+monthNames[newData.x.getMonth()] +"<br>Reading: "+newData.y)
             .style("left", (d3.event.pageX) + "px")
             .style("top", (d3.event.pageY) + "px");
     
@@ -212,59 +238,56 @@ function draw() {
 				.duration(50)
                 .style("opacity", 0);
         });
-        
+
+
+    svg.append("text")
+        .attr("class", "x label")
+        .attr("text-anchor", "end")
+        .attr("x", width-200)
+        .style("font-size", "14px") 
+        .style("font-weight", "bold")
+        .style("font-family", "sans-serif")  
+        .attr("y", 380)
+        .attr("dy", ".75em")
+        .attr("transform", "rotate(0)")
+        .text("Time");
+
+    svg.append("text")
+        .attr("class", "y label")
+        .attr("text-anchor", "end")
+        .attr("x", -150)
+        .style("font-size", "14px") 
+        .style("font-weight", "bold") 
+        .style("font-family", "sans-serif") 
+        .attr("y", -50)
+        .attr("dy", ".75em")
+        .attr("transform", "rotate(-90)")
+        .text("Readings");
+
+
+    svg.append("text")
+        .attr("x", (width / 2))             
+        .attr("y", 4 )
+        .attr("text-anchor", "middle")  
+        .style("font-size", "16px") 
+        .style("font-weight", "bold") 
+        .style("font-family", "sans-serif") 
+        .style("text-decoration", "underline")  
+        .text("Chemical Readings vs Time");    
 }
-
-
-
-svg.append("text")
-    .attr("class", "x label")
-    .attr("text-anchor", "end")
-    .attr("x", width-200)
-    .style("font-size", "14px") 
-    .style("font-weight", "bold")
-    .style("font-family", "sans-serif")  
-    .attr("y", 380)
-    .attr("dy", ".75em")
-    .attr("transform", "rotate(0)")
-    .text("Time");
-
-svg.append("text")
-    .attr("class", "y label")
-    .attr("text-anchor", "end")
-    .attr("x", -150)
-    .style("font-size", "14px") 
-    .style("font-weight", "bold") 
-    .style("font-family", "sans-serif") 
-    .attr("y", -50)
-    .attr("dy", ".75em")
-    .attr("transform", "rotate(-90)")
-    .text("Readings");
-
-
-svg.append("text")
-    .attr("x", (width / 2))             
-    .attr("y", 4 )
-    .attr("text-anchor", "middle")  
-    .style("font-size", "16px") 
-    .style("font-weight", "bold") 
-    .style("font-family", "sans-serif") 
-    .style("text-decoration", "underline")  
-    .text("Chemical Readings vs Time");    
-
 
 
 document.getElementById("text-AGOC3A").addEventListener('click',function (){
    var agocLine = document.getElementById('line-AGOC3A');
    var agocText = document.getElementById('text-AGOC3A');
-   if (agocLine.style.visibility === 'hidden' ){ 
-        agocLine.style.visibility = 'visible';
-        agocText.style.opacity = 1;
-   }
-    else {
+   if (hidden['AGOC 3A']) {
+       agocLine.style.visibility = 'visible';
+       agocText.style.opacity = 1;
+    } else {
         agocLine.style.visibility = 'hidden';
         agocText.style.opacity = 0.2;
     }
+    hidden['AGOC 3A'] = !hidden['AGOC 3A']
 }); 
 document.getElementById("text-AGOC3A").addEventListener('mouseover',function (){
     var agocText = document.getElementById('text-AGOC3A');
@@ -274,21 +297,24 @@ document.getElementById("text-AGOC3A").addEventListener('mouseover',function (){
 
 document.getElementById("text-AGOC3A").addEventListener('mouseout',function (){
     var agocText = document.getElementById('text-AGOC3A');
-    agocText.style.opacity = 1;
+    if (!hidden['AGOC 3A']) 
+        agocText.style.opacity = 1;
+    else 
+        agocText.style.opacity = 0.2
 });
 
 
 document.getElementById("text-APPLUIMONIA").addEventListener('click',function (){
     var appluimoniaLine = document.getElementById('line-APPLUIMONIA');
     var appluimoniaText = document.getElementById('text-APPLUIMONIA');
-    if (appluimoniaLine.style.visibility === 'hidden' ){ 
+    if (hidden['Appluimonia']) {
         appluimoniaLine.style.visibility = 'visible';
         appluimoniaText.style.opacity = 1;
-    }
-     else {
+     } else {
         appluimoniaLine.style.visibility = 'hidden';
         appluimoniaText.style.opacity = 0.2;
      }
+    hidden['Appluimonia'] = !hidden['Appluimonia']
 }); 
 
 document.getElementById("text-APPLUIMONIA").addEventListener('mouseover',function (){
@@ -299,21 +325,24 @@ document.getElementById("text-APPLUIMONIA").addEventListener('mouseover',functio
 
 document.getElementById("text-APPLUIMONIA").addEventListener('mouseout',function (){
     var appluimoniaText = document.getElementById('text-APPLUIMONIA');
-    appluimoniaText.style.opacity = 1;
+    if (!hidden['Appluimonia']) 
+        appluimoniaText.style.opacity = 1;
+    else 
+        appluimoniaText.style.opacity = 0.2
 });
 
 
 document.getElementById("text-CHLORODININE").addEventListener('click',function (){
     var chlorodinineLine = document.getElementById('line-CHLORODININE');
     var chlorodinineText = document.getElementById('text-CHLORODININE');
-    if (chlorodinineLine.style.visibility === 'hidden' ){ 
+    if (hidden['Chlorodinine']) {
         chlorodinineLine.style.visibility = 'visible';
         chlorodinineText.style.opacity = 1;
-    }
-     else {
+     } else {
         chlorodinineLine.style.visibility = 'hidden';
         chlorodinineText.style.opacity = 0.2;
      }
+    hidden['Chlorodinine'] = !hidden['Chlorodinine']
 }); 
 
 document.getElementById("text-CHLORODININE").addEventListener('mouseover',function (){
@@ -324,21 +353,24 @@ document.getElementById("text-CHLORODININE").addEventListener('mouseover',functi
 
 document.getElementById("text-CHLORODININE").addEventListener('mouseout',function (){
     var chlorodinineText = document.getElementById('text-CHLORODININE');
-    chlorodinineText.style.opacity = 1;
+    if (!hidden['Chlorodinine']) 
+        chlorodinineText.style.opacity = 1;
+    else 
+        chlorodinineText.style.opacity = 0.2
 });
 
 
 document.getElementById("text-METHYLOSMOLENE").addEventListener('click',function (){
     var methylosmoleneLine = document.getElementById('line-METHYLOSMOLENE');
     var methylosmoleneText = document.getElementById('text-METHYLOSMOLENE');
-    if (methylosmoleneLine.style.visibility === 'hidden' ){ 
+    if (hidden['Methylosmolene']) {
         methylosmoleneLine.style.visibility = 'visible';
         methylosmoleneText.style.opacity = 1;
-    }
-     else {
+     } else {
         methylosmoleneLine.style.visibility = 'hidden';
         methylosmoleneText.style.opacity = 0.2;
      }
+    hidden['Methylosmolene'] = !hidden['Methylosmolene']
 }); 
 
 document.getElementById("text-METHYLOSMOLENE").addEventListener('mouseover',function (){
@@ -349,5 +381,14 @@ document.getElementById("text-METHYLOSMOLENE").addEventListener('mouseover',func
 
 document.getElementById("text-METHYLOSMOLENE").addEventListener('mouseout',function (){
     var methylosmoleneText = document.getElementById('text-METHYLOSMOLENE');
-    methylosmoleneText.style.opacity = 1;
+    if (!hidden['Methylosmolene']) 
+        methylosmoleneText.style.opacity = 1;
+    else 
+        methylosmoleneText.style.opacity = 0.2
+});
+
+
+document.getElementById("months-linechart").addEventListener('change',function (){
+    var month = document.getElementById("months-linechart").value;
+    draw(month)
 });
