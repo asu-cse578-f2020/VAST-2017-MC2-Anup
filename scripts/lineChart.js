@@ -68,9 +68,13 @@ function draw(monthName) {
     let yScale = d3.scaleLinear()
     .range([ height, 0 ])
     .domain([d3.min(data, function (d) {
-        return +d.Reading
+        var xDate =  timeConv(d.Date)
+        if(xDate.getMonth()===month) 
+            return +d.Reading
     }), d3.max(data, function(d) { 
-        return +d.Reading; 
+        var xDate =  timeConv(d.Date)
+        if(xDate.getMonth()===month) 
+            return +d.Reading; 
     })])
 
     svg.append("g")
