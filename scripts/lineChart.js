@@ -8,10 +8,12 @@ let data
 let svg = d3.select("#linechart")
     .append("div")
     .append("svg")
+    .attr("class","line-svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
     .attr("transform","translate(" + margin.left + "," + margin.top + ")");
+    
 
 var tooltip = d3.select("#linechart")
                 .append("div")
@@ -242,7 +244,7 @@ svg.append("text")
 
 svg.append("text")
     .attr("x", (width / 2))             
-    .attr("y", 10 )
+    .attr("y", 4 )
     .attr("text-anchor", "middle")  
     .style("font-size", "16px") 
     .style("font-weight", "bold") 

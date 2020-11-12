@@ -12,6 +12,9 @@ svg {
   width:600px; */
   margin:5px;
 }
+.line-svg{
+  border:none
+}
 #linechart {
   border: 1px solid black;
   border-radius: 10px;
