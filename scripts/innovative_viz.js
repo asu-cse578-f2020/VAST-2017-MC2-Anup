@@ -1,6 +1,6 @@
 var scatterPlotMargin = { top: 10, right: 40, bottom: 40, left: 60 }
 
-var scatterPlotWidth = 1500 - scatterPlotMargin.left - scatterPlotMargin.right;
+var scatterPlotWidth = 1000 - scatterPlotMargin.left - scatterPlotMargin.right;
 var scatterPlotHeight = 500 - scatterPlotMargin.top - scatterPlotMargin.bottom;
 
 var symbol = d3.symbol().size(150);
@@ -13,11 +13,13 @@ var scatterPlotSvg = d3.select("#innovative_dataviz")
     .attr("transform",
         "translate(" + scatterPlotMargin.left + "," + scatterPlotMargin.top + ")");;
 
-d3.select("#innovative_dataviz").append("input")
-    .attr("class", "playPause")
-    .attr("type", "button")
-    .attr("value", "Start")
-    .attr("onClick", "toggleAnimation()");
+// d3.select("#innovative_dataviz").append("input")
+//     .attr("class", "playPause")
+//     .attr("type", "button")
+//     .attr("value", "Start")
+//     .attr("onClick", "toggleAnimation()");
+    d3.select("#innovative_dataviz")
+        .attr("onClick", "toggleAnimation()");
 
 compass = d3.select("#innovative_dataviz").select("svg").append("g")
     .attr("transform", "translate(" + 0 + "," + (scatterPlotHeight + 100) + ")")
@@ -156,7 +158,7 @@ function drawScatterPlot() {
                 d3.select('#factoryPlots').style('display', '');
             }
 
-            window.scrollTo(0, 2000);
+            window.scrollTo({top:2000, behavior: 'smooth'});
         })
 }
 
