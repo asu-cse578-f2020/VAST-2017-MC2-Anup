@@ -167,7 +167,7 @@ function draw(monthName) {
             tooltip.transition()
             .duration(50)
             .style("opacity", 1);
-            tooltip.html("Chemical: " +"Appluimonia" + "<br>Date: "+monthNames[newData.x.getMonth()-1] +"<br>Reading: "+newData.y)
+            tooltip.html("Chemical: " +"Appluimonia" + "<br>Date: "+monthNames[newData.x.getMonth()] +"<br>Reading: "+newData.y)
             .style("left", (d3.event.pageX) + "px")
             .style("top", (d3.event.pageY) + "px");
     
@@ -200,7 +200,7 @@ function draw(monthName) {
             tooltip.transition()
             .duration(50)
             .style("opacity", 1);
-            tooltip.html("Chemical: " +"Chlorodinine" + "<br>Date: "+monthNames[newData.x.getMonth()-1] +"<br>Reading: "+newData.y)
+            tooltip.html("Chemical: " +"Chlorodinine" + "<br>Date: "+monthNames[newData.x.getMonth()] +"<br>Reading: "+newData.y)
             .style("left", (d3.event.pageX) + "px")
             .style("top", (d3.event.pageY) + "px");
     
@@ -232,7 +232,7 @@ function draw(monthName) {
             tooltip.transition()
             .duration(50)
             .style("opacity", 1);
-            tooltip.html("Chemical: " +"Methylosmolene" + "<br>Date: "+monthNames[newData.x.getMonth()-1] +"<br>Reading: "+newData.y)
+            tooltip.html("Chemical: " +"Methylosmolene" + "<br>Date: "+monthNames[newData.x.getMonth()] +"<br>Reading: "+newData.y)
             .style("left", (d3.event.pageX) + "px")
             .style("top", (d3.event.pageY) + "px");
     
