@@ -50,14 +50,17 @@ h2, h3 {
 
 #heatmap{
   width: 550px;
-  height: 400px;
+  height: 520px;
   border:1px solid gray;
   border-radius:10px;
   margin:5px;
   padding: 10px;
 }
 #heatMapSvg{
+  position: relative;
   padding: 10px 10px 10px 10px;
+  max-width: 90%;
+  top:20%;
 }
 .month {
   margin-right: 8px;
@@ -136,4 +139,20 @@ h2, h3 {
 
 .container div {
   display: inline-block;
+}
+
+.title-text{
+  font-size: 16px;
+  font-weight: bold;
+  font-family: Inconsolata;
+  text-decoration: underline;
+  position: absolute;
+  left: 30%;
+  top: 2%;
+}
+
+#chemical{
+  position: relative;
+  top: 10%;
+  text-align: left;
 }
