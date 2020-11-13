@@ -18,11 +18,12 @@ function drawHeatMap(data, factory){
 
 	d3.select("#heatMapSvg").remove();
 	d3.selectAll('.title-text').remove();
+	d3.selectAll("defs").remove();
 	heatMapSvg = d3.select("#heatmap").append("svg")
 					.attr("id", "heatMapSvg")
 					.attr("width", width + margin.left + margin.right)
 					.attr("height", height + margin.top + margin.bottom)
-					.attr("transform", `translate(${margin.left}, ${margin.top})`)
+					.attr("transform", `translate(0, ${margin.top})`)
 
     //factory = d3.select("#factory").node().value;
     chemical = d3.select('input[name="chemical"]:checked').node().value;
@@ -154,7 +155,7 @@ function drawCalender(data, factory){
 		.filter(function(d) { 
 			return d in reading; 
 		})
-		.style("fill", function(d) { return d3.interpolateBlues(scale(reading[d])); })
+		.style("fill", function(d) { return d3.interpolateYlOrRd(scale(reading[d])); })
 		.on("mouseover", function(d) {
 			d3.select(this)
 				.style('stroke', 'black')
@@ -190,8 +191,6 @@ function drawCalender(data, factory){
 	// chart title
 	d3.select("#heatmap").append("text")
 		.attr("text-anchor", "middle")
-		.attr("x", -5)
-		.attr("y", 0)
 		.text(factory)
 		.attr("class", "title-text")
 	

@@ -154,4 +154,5 @@ h2, h3 {
 #chemical{
   position: relative;
   top: 10%;
+  text-align: left;
 }
