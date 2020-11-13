@@ -2,12 +2,6 @@
 export {drawHeatMap}
 
 var heatMapSvg;
-var factoryVal = {
-	'RFE':'Roadrunner Fitness Electronics',
-    'KOF':'Kasios Office Furniture',
-    'RCT':'Radiance ColourTek',
-    'ISB':'Indigo Sol Boards'
-}
 
 // div for tooltip
 var div = d3.select("body")
@@ -15,27 +9,28 @@ var div = d3.select("body")
 		    .attr("class", "tooltip")
 			.style("opacity", 0);
 			
-var chemical, factory;
+var chemical;
 var margin = { top: 10, right: 10, bottom: 10, left: 10 }
 var width = 475 - margin.left - margin.right
 var height = 250 - margin.top - margin.bottom
 
-function drawHeatMap(data){
+function drawHeatMap(data, factory){
 
-	d3.select("#heatMapSvg").remove()
+	d3.select("#heatMapSvg").remove();
+	d3.selectAll('.title-text').remove();
 	heatMapSvg = d3.select("#heatmap").append("svg")
 					.attr("id", "heatMapSvg")
 					.attr("width", width + margin.left + margin.right)
 					.attr("height", height + margin.top + margin.bottom)
 					.attr("transform", `translate(${margin.left}, ${margin.top})`)
 
-    factory = d3.select("#factory").node().value;
+    //factory = d3.select("#factory").node().value;
     chemical = d3.select('input[name="chemical"]:checked').node().value;
 	var heatMapData = {};
 
 	// filter the data
 	data.forEach(function(d){
-		if(d['highest_contributor'] == factoryVal[factory]){
+		if(d['highest_contributor'] == factory){
 			if(d['Chemical'] == chemical){
 				var date = d['Date Time '].split(" ")[0];
 
@@ -65,10 +60,10 @@ function drawHeatMap(data){
 		})
 	}
 
-	drawCalender(data);
+	drawCalender(data, factory);
 }
 
-function drawCalender(data){
+function drawCalender(data, factory){
 	
 	var weeksInMonth = function(month){
 		var m = d3.timeMonth.floor(month)
@@ -92,7 +87,9 @@ function drawCalender(data){
 						return d.day; 
 					})
 					.rollup(function(leaves) {
-						return d3.sum(leaves, function(d){ return parseInt(d.value); });
+						return d3.sum(leaves, function(d){ 
+							return parseInt(d.value); 
+						});
 					})
 					.object(data);
 
@@ -102,7 +99,8 @@ function drawCalender(data){
 		}))
 		.range([0, 1]); 
 		
-	var tooltipHtml = d =>  titleFormat(new Date(d)) + ":  " + reading[d]/100; 
+	var tooltipHtml = d =>  "Date: " + titleFormat(new Date(d)) + 
+					"<br>Reading:  " + reading[d]/100; 
 
 	var calenderWidth = function(d) {
 		var columns = weeksInMonth(d);
@@ -156,7 +154,7 @@ function drawCalender(data){
 		.filter(function(d) { 
 			return d in reading; 
 		})
-		.style("fill", function(d) { return d3.interpolatePuBu(scale(reading[d])); })
+		.style("fill", function(d) { return d3.interpolateBlues(scale(reading[d])); })
 		.on("mouseover", function(d) {
 			d3.select(this)
 				.style('stroke', 'black')
@@ -188,5 +186,13 @@ function drawCalender(data){
 				.duration(50)
 				.style("opacity", 0);
 		});
+
+	// chart title
+	d3.select("#heatmap").append("text")
+		.attr("text-anchor", "middle")
+		.attr("x", -5)
+		.attr("y", 0)
+		.text(factory)
+		.attr("class", "title-text")
 	
 }

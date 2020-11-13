@@ -1,3 +1,6 @@
+/* innovative_viz.js */ 
+import {drawHeatMap} from './heatMap.js';
+
 var scatterPlotMargin = { top: 10, right: 40, bottom: 40, left: 60 }
 
 var scatterPlotWidth = 1000 - scatterPlotMargin.left - scatterPlotMargin.right;
@@ -21,7 +24,7 @@ var scatterPlotSvg = d3.select("#innovative_dataviz")
     d3.select("#innovative_dataviz")
         .attr("onClick", "toggleAnimation()");
 
-compass = d3.select("#innovative_dataviz").select("svg").append("g")
+var compass = d3.select("#innovative_dataviz").select("svg").append("g")
     .attr("transform", "translate(" + 0 + "," + (scatterPlotHeight + 100) + ")")
 
 var tooltip = d3.select("body")
@@ -29,9 +32,12 @@ var tooltip = d3.select("body")
     .attr('class', 'tooltip')
     .style("opacity", 0);
 
+var factory;
+
 // data
 var data;
 var windData;
+var completeData;
 // svg elements
 var gDots;
 var ind = 0;
@@ -60,9 +66,11 @@ function drawInitialViz() {
 
 function loadData() {
     Promise.all([d3.csv('data/sensor_locations.csv'),
-    d3.csv('data/windData.csv')]).then(function (values) {
-        data = values[0]
+    d3.csv('data/windData.csv'),
+    d3.csv('../data/complete_data.csv')]).then(function (values) {
+        data = values[0];
         windData = values[1];
+        completeData = values[2];
 
         x.domain([0, d3.max(data, function (d) {
             return +d["x"];
@@ -75,6 +83,11 @@ function loadData() {
         // drawCircles()
         drawScatterPlot()
         drawCompass([windData[ind]])
+    });
+
+    // On chemical change call heat map for new chemical
+    d3.select('#chemical').on('change', function(){
+        drawHeatMap (completeData, factory);
     });
 }
 
@@ -156,6 +169,8 @@ function drawScatterPlot() {
             else {
                 d3.select('#sensorPlots').style('display', 'none');
                 d3.select('#factoryPlots').style('display', '');
+                drawHeatMap (completeData, d.name);
+                factory = d.name;
             }
 
             window.scrollTo({top:2000, behavior: 'smooth'});
@@ -191,7 +206,7 @@ function updateCompass(update, t) {
 }
 
 function enterCompass(enter, t) {
-    glyph = enter.append('g')
+    var glyph = enter.append('g')
 
     glyph.append("circle")
         .attr("transform", "translate(100,100)")
