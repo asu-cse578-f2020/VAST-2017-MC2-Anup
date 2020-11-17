@@ -58,6 +58,25 @@ function clear() {
 function drawLineChart(monthName,sensor) {
     clear()
     sensor_no = sensor
+    
+    hidden['Methylosmolene'] = false
+    hidden['Chlorodinine'] = false
+    hidden['Appluimonia'] = false
+    hidden['AGOC 3A'] = false
+
+    var methylosmoleneText = document.getElementById('text-METHYLOSMOLENE');
+    methylosmoleneText.style.opacity = 1;
+
+    var chlorodinineText = document.getElementById('text-CHLORODININE');
+    chlorodinineText.style.opacity = 1;
+
+    var appluimoniaText = document.getElementById('text-APPLUIMONIA');
+    appluimoniaText.style.opacity = 1;
+
+    var agocText = document.getElementById('text-AGOC3A');
+    agocText.style.opacity = 1;
+
+
     var months = [ 'january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december' ];
     var month = (months.indexOf(monthName));      
 
@@ -263,11 +282,11 @@ function drawLineChart(monthName,sensor) {
     svg.append("text")
         .attr("class", "x label")
         .attr("text-anchor", "end")
-        .attr("x", width-200)
+        .attr("x", width-190)
         .style("font-size", "14px") 
         .style("font-weight", "bold")
         .style("font-family", "sans-serif")  
-        .attr("y", 380)
+        .attr("y", 377)
         .attr("dy", ".75em")
         .attr("transform", "rotate(0)")
         .text("Time");
@@ -410,5 +429,8 @@ document.getElementById("text-METHYLOSMOLENE").addEventListener('mouseout',funct
 
 document.getElementById("months-linechart").addEventListener('change',function (){
     var month = document.getElementById("months-linechart").value;
+
+    
+
     drawLineChart(month,sensor_no)
 });
