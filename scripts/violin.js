@@ -5,7 +5,7 @@ var filteredData;
 var months=["January", "February", "March", "April", "May","June","July", "August", "September", "October", "November","December"];
 var margin = {top: 10, right: 30, bottom: 50, left: 40};
 var width = 460 - margin.left - margin.right;
-var height = 400 - margin.top - margin.bottom;
+var height = 500 - margin.top - margin.bottom;
 function drawViolinPlot(data,Chemical)
 {
     //filtering out the data first

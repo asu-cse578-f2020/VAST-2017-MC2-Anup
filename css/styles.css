@@ -53,8 +53,7 @@ h2, h3 {
   height: 520px;
   border:1px solid gray;
   border-radius:10px;
-  margin:5px;
-  padding: 10px;
+  
 }
 #heatMapSvg{
   position: relative;
@@ -137,9 +136,9 @@ h2, h3 {
     stroke: none;
 }
 
-.container div {
+/* .container div {
   display: inline-block;
-}
+} */
 
 .title-text{
   font-size: 16px;
