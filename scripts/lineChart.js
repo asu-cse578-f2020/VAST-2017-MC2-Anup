@@ -1,6 +1,6 @@
 export {drawLineChart}
 import { drawViolinPlot } from './violin.js'
-let margin = {top: 10, right: 30, bottom: 30, left: 60}
+let margin = {top: 10, right: 30, bottom: 50, left: 60}
 let width = 460 - margin.left - margin.right
 let height = 400 - margin.top - margin.bottom
 const timeConv = d3.timeParse("%Y-%m-%d");
@@ -286,7 +286,7 @@ function drawLineChart(monthName,sensor) {
         .style("font-size", "14px") 
         .style("font-weight", "bold")
         .style("font-family", "sans-serif")  
-        .attr("y", 377)
+        .attr("y", 370)
         .attr("dy", ".75em")
         .attr("transform", "rotate(0)")
         .text("Time");
