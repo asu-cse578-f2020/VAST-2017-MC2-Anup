@@ -1,3 +1,4 @@
+export {drawLineChart}
 import { drawViolinPlot } from './violin.js'
 let margin = {top: 10, right: 30, bottom: 30, left: 60}
 let width = 460 - margin.left - margin.right
@@ -11,7 +12,7 @@ let hidden = {
     'Chlorodinine' : false,
     'Methylosmolene' : false,
 }
-
+var sensor_no
 
 let svg = d3.select("#linechart")
     .append("div")
@@ -38,8 +39,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     data = values[0]
     sensorData = values[1]
     var month = document.getElementById("months-linechart").value;
-
-    draw(month)
+    sensor_no = "1"
+    drawLineChart(month,sensor_no)
 
 });
 
@@ -54,9 +55,9 @@ function clear() {
       .attr("transform", `translate(${margin.left},${margin.top})`);
   }
 
-function draw(monthName) {
+function drawLineChart(monthName,sensor) {
     clear()
-
+    sensor_no = sensor
     var months = [ 'january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december' ];
     var month = (months.indexOf(monthName));      
 
@@ -64,7 +65,7 @@ function draw(monthName) {
     .range([ 0, width ])
     .domain(d3.extent(data, function(d) { 
         var xDate =  timeConv(d.Date)
-        if(xDate.getMonth()===month) 
+        if(xDate.getMonth()===month && d.Monitor===sensor) 
             return xDate;
     }))
 
@@ -72,11 +73,11 @@ function draw(monthName) {
     .range([ height, 0 ])
     .domain([d3.min(data, function (d) {
         var xDate =  timeConv(d.Date)
-        if(xDate.getMonth()===month) 
+        if(xDate.getMonth()===month && d.Monitor===sensor) 
             return +d.Reading
     }), d3.max(data, function(d) { 
         var xDate =  timeConv(d.Date)
-        if(xDate.getMonth()===month) 
+        if(xDate.getMonth()===month && d.Monitor===sensor) 
             return +d.Reading; 
     })])
 
@@ -101,16 +102,16 @@ function draw(monthName) {
     let Appluimonia_data = []
     let Chlorodinine_data = []
     let Methylosmolene_data = []
-    console.log(month)
+    // console.log(data)
     data.forEach(element => {
         var mon = timeConv(element['Date']).getMonth()
-        if (element['Chemical'] == 'AGOC-3A' && month===mon) {
+        if (element['Chemical'] == 'AGOC-3A' && month===mon && element['Monitor']===sensor) {
             AGOC_3A_data.push(element)
-        } else if (element['Chemical'] == 'Appluimonia' && month===mon) {
+        } else if (element['Chemical'] == 'Appluimonia' && month===mon && element['Monitor']===sensor) {
             Appluimonia_data.push(element)
-        } else if (element['Chemical'] == 'Chlorodinine' && month===mon) {
+        } else if (element['Chemical'] == 'Chlorodinine' && month===mon && element['Monitor']===sensor) {
             Chlorodinine_data.push(element)
-        } else if (element['Chemical'] == 'Methylosmolene' && month===mon) {
+        } else if (element['Chemical'] == 'Methylosmolene' && month===mon && element['Monitor']===sensor) {
             Methylosmolene_data.push(element)
         }
     })
@@ -137,7 +138,7 @@ function draw(monthName) {
             tooltip.transition()
             .duration(50)
             .style("opacity", 1);
-            tooltip.html("Chemical: " +"Agoc 3A" + "<br>Date: "+monthNames[newData.x.getMonth()] +"<br>Reading: "+newData.y)
+            tooltip.html("Sensor: "+ sensor +"<br>Chemical: " +"Agoc 3A" + "<br>Date: "+monthNames[newData.x.getMonth()]+" "+ newData.x.getDate()+"<br>Reading: "+newData.y)
             .style("left", (d3.event.pageX) + "px")
             .style("top", (d3.event.pageY) + "px");
     
@@ -173,7 +174,7 @@ function draw(monthName) {
             tooltip.transition()
             .duration(50)
             .style("opacity", 1);
-            tooltip.html("Chemical: " +"Appluimonia" + "<br>Date: "+monthNames[newData.x.getMonth()] +"<br>Reading: "+newData.y)
+            tooltip.html("Sensor: "+ sensor +"<br>Chemical: " +"Appluimonia" + "<br>Date: "+monthNames[newData.x.getMonth()] +" "+ newData.x.getDate()+"<br>Reading: "+newData.y)
             .style("left", (d3.event.pageX) + "px")
             .style("top", (d3.event.pageY) + "px");
     
@@ -209,7 +210,7 @@ function draw(monthName) {
             tooltip.transition()
             .duration(50)
             .style("opacity", 1);
-            tooltip.html("Chemical: " +"Chlorodinine" + "<br>Date: "+monthNames[newData.x.getMonth()] +"<br>Reading: "+newData.y)
+            tooltip.html("Sensor: "+ sensor +"<br>Chemical: " +"Chlorodinine" + "<br>Date: "+monthNames[newData.x.getMonth()] +" "+ newData.x.getDate()+"<br>Reading: "+newData.y)
             .style("left", (d3.event.pageX) + "px")
             .style("top", (d3.event.pageY) + "px");
     
@@ -244,7 +245,7 @@ function draw(monthName) {
             tooltip.transition()
             .duration(50)
             .style("opacity", 1);
-            tooltip.html("Chemical: " +"Methylosmolene" + "<br>Date: "+monthNames[newData.x.getMonth()] +"<br>Reading: "+newData.y)
+            tooltip.html("Sensor: "+ sensor +"<br>Chemical: " +"Methylosmolene" + "<br>Date: "+monthNames[newData.x.getMonth()] +" "+ newData.x.getDate()+"<br>Reading: "+newData.y)
             .style("left", (d3.event.pageX) + "px")
             .style("top", (d3.event.pageY) + "px");
     
@@ -409,5 +410,5 @@ document.getElementById("text-METHYLOSMOLENE").addEventListener('mouseout',funct
 
 document.getElementById("months-linechart").addEventListener('change',function (){
     var month = document.getElementById("months-linechart").value;
-    draw(month)
+    drawLineChart(month,sensor_no)
 });

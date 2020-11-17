@@ -1,5 +1,6 @@
 /* innovative_viz.js */ 
 import {drawHeatMap} from './heatMap.js';
+import { drawLineChart } from './lineChart.js'
 
 var scatterPlotMargin = { top: 10, right: 40, bottom: 40, left: 60 }
 
@@ -165,6 +166,8 @@ function drawScatterPlot() {
             if (d.type == 'sensor') {
                 d3.select('#factoryPlots').style('display', 'none');
                 d3.select('#sensorPlots').style('display', '');
+                var month = document.getElementById("months-linechart").value;
+                drawLineChart(month,d.name)
             }
             else {
                 d3.select('#sensorPlots').style('display', 'none');

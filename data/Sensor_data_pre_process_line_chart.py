@@ -10,8 +10,8 @@ class PreProcess:
             self.sensor.DateTime, format="%m/%d/%y %H:%M"
         ).dt.date
 
-        self.sensor = sensor_data[['Chemical', 'Date', 'Reading']]
-        self.sensor  = self.sensor.groupby(['Chemical','Date'])[['Reading']].mean()
+        self.sensor = sensor_data[['Chemical','Monitor', 'Date', 'Reading']]
+        self.sensor  = self.sensor.groupby(['Chemical','Monitor','Date'])[['Reading']].mean()
 
         return self.sensor
 
