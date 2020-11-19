@@ -14,7 +14,7 @@ let hidden = {
 }
 var sensor_no
 
-let svg = d3.select("#linechart")
+let svg = d3.select("#graph-layout")
     .append("div")
     .append("svg")
     .attr("class","line-svg")

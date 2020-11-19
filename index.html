@@ -42,25 +42,30 @@
 
     <div class="text-center" id="sensorPlots" style="margin-top:25px; margin-left: 125px; display: none;">
       <div class="row">
-
-          <div id="linechart">
-            <div class="color-layout">
-              <div>
-                  <label for="months">Month</label>
-                  <select name="months" id="months-linechart">
-                    <option value="april">April</option>
-                    <option value="august">August</option>
-                    <option value="december">December</option>
-                  </select>
+        
+        <div id="linechart">
+          <div id="graph-layout">
+              <div class="color-layout">
+                <div>
+                    <label for="months">Month</label>
+                    <select name="months" id="months-linechart">
+                      <option value="april">April</option>
+                      <option value="august">August</option>
+                      <option value="december">December</option>
+                    </select>
+                </div>
+                <div class="lineChartColorText" >
+                    <p id="text-AGOC3A" style="color: green;">&nbsp;&boxh;&boxh;&boxh;&nbsp;AGOC 3A</p>
+                    <p id="text-APPLUIMONIA" style="color: blue;">&nbsp;&boxh;&boxh;&boxh;&nbsp;Appluimonia</p>
+                    <p id="text-CHLORODININE" style="color: red;">&nbsp;&boxh;&boxh;&boxh;&nbsp;  Chlorodinine</p>
+                    <p id="text-METHYLOSMOLENE" style="color: orange;">&nbsp;&boxh;&boxh;&boxh;&nbsp;  Methylosmolene</p>
+                </div>
               </div>
-              <div class="lineChartColorText" >
-                  <p id="text-AGOC3A" style="color: green;">&nbsp;&boxh;&boxh;&boxh;&nbsp;AGOC 3A</p>
-                  <p id="text-APPLUIMONIA" style="color: blue;">&nbsp;&boxh;&boxh;&boxh;&nbsp;Appluimonia</p>
-                  <p id="text-CHLORODININE" style="color: red;">&nbsp;&boxh;&boxh;&boxh;&nbsp;  Chlorodinine</p>
-                  <p id="text-METHYLOSMOLENE" style="color: orange;">&nbsp;&boxh;&boxh;&boxh;&nbsp;  Methylosmolene</p>
-              </div>
-            </div>
           </div>
+          <div id="text-msg">Click on the line Chart to see a box plot of the selected chemical</div>
+        </div> 
+            
+        
 
           <div id="violin" style="width: 600px;"></div>
 

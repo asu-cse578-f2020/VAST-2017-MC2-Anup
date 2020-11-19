@@ -18,13 +18,13 @@ svg {
 #linechart {
   border: 1px solid black;
   border-radius: 10px;
-  height: 500px;
+  /* height: 500px; */
   width: 800px;
   margin: 5px;
-  display:flex;
+  /* display:flex;
   flex-direction : row-reverse;
   justify-content: center;
-  align-items: center;
+  align-items: center; */
 }
 .color-layout{
   display: flex;
@@ -34,7 +34,17 @@ svg {
   width: 400px;
   flex-direction : column;
 }
-
+#graph-layout{
+  display:flex;
+  flex-direction : row-reverse;
+  justify-content: center;
+  align-items: center;
+}
+#text-msg{
+  display:flex;
+  justify-content: flex-end;
+  padding-right: 10px;
+}
 html {
   font-family: 'Trebuchet MS', sans-serif;
 }
