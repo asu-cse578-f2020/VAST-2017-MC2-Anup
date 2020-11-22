@@ -1,5 +1,5 @@
-/* innovative_viz.js */ 
-import {drawHeatMap} from './heatMap.js';
+/* innovative_viz.js */
+import { drawHeatMap } from './heatMap.js';
 import { drawLineChart } from './lineChart.js'
 
 var scatterPlotMargin = { top: 10, right: 40, bottom: 40, left: 60 }
@@ -17,16 +17,12 @@ var scatterPlotSvg = d3.select("#innovative_dataviz")
     .attr("transform",
         "translate(" + scatterPlotMargin.left + "," + scatterPlotMargin.top + ")");;
 
-// d3.select("#innovative_dataviz").append("input")
-//     .attr("class", "playPause")
-//     .attr("type", "button")
-//     .attr("value", "Start")
-//     .attr("onClick", "toggleAnimation()");
-    d3.select("#innovative_dataviz")
-        .attr("onClick", "toggleAnimation()");
+d3.select(".playPause").on("click", function () {
+    toggleAnimation()
+});
 
 var compass = d3.select("#innovative_dataviz").select("svg").append("g")
-    .attr("transform", "translate(" + 0 + "," + (scatterPlotHeight + 100) + ")")
+    .attr("transform", "translate(" + 420 + "," + (120) + ")")
 
 var tooltip = d3.select("body")
     .append("div")
@@ -87,8 +83,8 @@ function loadData() {
     });
 
     // On chemical change call heat map for new chemical
-    d3.select('#chemical').on('change', function(){
-        drawHeatMap (completeData, factory);
+    d3.select('#chemical').on('change', function () {
+        drawHeatMap(completeData, factory);
     });
 }
 
@@ -104,35 +100,8 @@ function drawScatterPlot() {
         .attr("font-family", "sans-serif")
         .style("text-decoration", "underline")
         .attr("font-weight", 700)
-        .text("Sensor Locations");
+        .text("Sensor & Factory Locations");
 
-    scatterPlotSvg.append("g")
-        .attr("transform", "translate(0," + scatterPlotHeight + ")")
-        .call(d3.axisBottom(x));
-
-    scatterPlotSvg.append("g")
-        .call(d3.axisLeft(y));
-
-    scatterPlotSvg.append("text")
-        .attr("transform",
-            "translate(" + (scatterPlotWidth / 2) + " ," +
-            (scatterPlotHeight + scatterPlotMargin.top + 20) + ")")
-        .style("text-anchor", "middle")
-        .style("font-size", "14px")
-        .attr("font-family", "sans-serif")
-        .attr("font-weight", 400)
-        .text("X");
-
-    scatterPlotSvg.append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", -60)
-        .attr("x", 0 - (scatterPlotHeight / 2))
-        .attr("dy", "1em")
-        .style("text-anchor", "middle")
-        .style("font-size", "14px")
-        .attr("font-family", "sans-serif")
-        .attr("font-weight", 400)
-        .text("Y");
 
     var shape = d3.scaleOrdinal(data.map(d => d.type), d3.symbols.map(s => symbol.type(s)()))
 
@@ -143,7 +112,7 @@ function drawScatterPlot() {
         .selectAll("path")
         .data(data)
         .join("path")
-        .attr("transform", d => `translate(${x(d.x)},${y(d.y)})`)
+        .attr("transform", d => `translate(${x(d.x - 30)},${y(d.y - 5)})`)
         .attr("fill", d => colorScale(d.type))
         .attr("d", d => shape(d.type));
 
@@ -167,16 +136,16 @@ function drawScatterPlot() {
                 d3.select('#factoryPlots').style('display', 'none');
                 d3.select('#sensorPlots').style('display', '');
                 var month = document.getElementById("months-linechart").value;
-                drawLineChart(month,d.name)
+                drawLineChart(month, d.name)
             }
             else {
                 d3.select('#sensorPlots').style('display', 'none');
                 d3.select('#factoryPlots').style('display', '');
-                drawHeatMap (completeData, d.name);
+                drawHeatMap(completeData, d.name);
                 factory = d.name;
             }
 
-            window.scrollTo({top:2000, behavior: 'smooth'});
+            window.scrollTo({ top: 2000, behavior: 'smooth' });
         })
 }
 
@@ -271,11 +240,12 @@ function toggleAnimation() {
     const currentState = d3.select('.playPause').attr('value');
     const updatedLabel = currentState == 'Start' ? 'Stop' : 'Start';
     d3.select('.playPause').attr('value', updatedLabel);
+
+    document.getElementById('playPause').innerHTML = updatedLabel
     circleTransitions()
 }
 
 function circleTransitions() {
-
     if (d3.select('.playPause').attr('value') == 'Stop' && ind < windData.length - 1) {
         ind = ind + 1;
         drawCompass([windData[ind]]);
