@@ -134,12 +134,16 @@ h2, h3 {
 
 .link {
   fill: none;
-  stroke: #000;
-  opacity: .3;
+  opacity: .8;
 }
 .link.on {
   stroke: #F00;
   opacity: .7;
+}
+
+.link:hover {
+  stroke: green;
+  opacity: 0.8;
 }
 
 .node {

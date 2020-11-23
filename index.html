@@ -21,7 +21,7 @@
     <script src='./scripts/lineChart.js' type="module" defer></script>
 
   </head>
-  <body>
+  <body style="background-image: url('./images/background.jpg'); -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;">
     <nav class="navbar navbar-light" style="background-color: #92ecbc; width:100%; display: inline-block; text-align: center;">
       <a id="mainTitle">
           <img src="./images/bird.png" class="img-fluid">
@@ -40,7 +40,7 @@
       <button type="button" id='playPause' class="btn btn-secondary playPause">Start</button>
     </div>
 
-    <div class="text-center" id="sensorPlots" style="margin-top:25px; margin-left: 125px; display: none;">
+    <div class="text-center" id="sensorPlots" style="margin-top:25px; margin-left:125px; margin-bottom:25px; display: none;">
       <div class="row">
         
         <div id="linechart">
@@ -72,7 +72,7 @@
         </div>
     </div>
 
-    <div class="container text-center" id = "factoryPlots" style="margin-top:25px; display: none;">
+    <div class="container text-center" id = "factoryPlots" style="margin-top:25px; margin-bottom:25px; display: none;">
     <div class="row">
 
           <div id="heatmap" class="col-6">

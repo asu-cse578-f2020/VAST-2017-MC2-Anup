@@ -5,6 +5,8 @@ const outerHeight = 520;
 const width = outerWidth - margin.left - margin.right;
 const height = outerHeight - margin.top - margin.bottom;
 
+const colorScale =  d3.scaleSequential()
+                  .interpolator(d3.interpolateOrRd);
 
 d3.json("data/sankey.json").then(function (data) {
 
@@ -27,6 +29,15 @@ d3.json("data/sankey.json").then(function (data) {
         .links(data.links)
         .layout(1);
 
+    var arr = []
+    data.links.forEach(function (value, index, array) {
+        arr.push(parseInt(value.value));
+      })
+    max_val = Math.max(...arr)
+    min_val = Math.min(...arr)
+
+    colorScale.domain([min_val, max_val])
+
     var link = svg.append("g")
         .selectAll(".link")
         .data(data.links)
@@ -35,7 +46,8 @@ d3.json("data/sankey.json").then(function (data) {
         .attr("class", "link")
         .attr("d", sankey.link())
         .attr('opacity', 0.2)
-        .style("stroke-width", function(d) { return Math.max(1, d.dy); })
+        .attr('stroke', function(d) { return d.color = colorScale(d.value); })
+        .attr("stroke-width", function(d) { return Math.max(1, d.dy); })
         .sort(function(a, b) { return b.dy - a.dy; });
 
     var node = svg.append("g")
@@ -68,5 +80,4 @@ d3.json("data/sankey.json").then(function (data) {
         .filter(function(d) { return d.x < width / 2; })
         .attr("x", 6 + sankey.nodeWidth())
         .attr("text-anchor", "start");
-
 });
