@@ -15,7 +15,7 @@ var scatterPlotSvg = d3.select("#innovative_dataviz")
     .attr("height", scatterPlotHeight + scatterPlotMargin.top + scatterPlotMargin.bottom)
     .append("g")
     .attr("transform",
-        "translate(" + scatterPlotMargin.left + "," + scatterPlotMargin.top + ")");;
+        "translate(" + scatterPlotMargin.left + "," + scatterPlotMargin.top + ")");
 
 d3.select(".playPause").on("click", function () {
     toggleAnimation()
@@ -38,6 +38,7 @@ var completeData;
 // svg elements
 var gDots;
 var ind = 0;
+var curDateBg;
 // axes
 var x = d3.scaleLinear()
     .range([0, scatterPlotWidth]);
@@ -158,6 +159,26 @@ function drawScatterPlot() {
 
     makeMonth(+document.getElementById("months-innovative_dataviz").value,year);
     drawCalender()
+
+    curDateBg = scatterPlotSvg
+        .append("text")
+        .attr("class", "curDateBg")
+        .attr("x", width/2-200)
+        .attr("y", height/2+70)
+        .attr("font-size", "16px")
+        .attr("text-anchor",  "middle")
+        .attr("opacity", 0.5)
+        .style("pointer-events", "none")
+        .text(windData[ind]['Date Time '])
+
+    d3.select("#dateSlider").on("change", function(d){
+        ind = +this.value
+        d3.select("#yearEntry").attr("value", ind)
+        d3.select("#yearEntry").property("value", ind)
+        curDateBg.text(windData[ind]['Date Time '])
+
+        drawCompass([windData[ind]])
+        })
 }
 
 function drawCompass(compassData) {
@@ -260,6 +281,11 @@ function toggleAnimation() {
 function circleTransitions() {
     if (d3.select('.playPause').attr('value') == 'Stop' && ind < windData.length - 1) {
         ind = ind + 1;
+        
+        curDateBg.text(windData[ind]['Date Time '])
+        d3.select("#dateSlider").attr("value", ind)
+        d3.select("#dateSlider").property("value", ind)
+
         drawCompass([windData[ind]]);
     }
     else if (ind == windData.length - 1) {
