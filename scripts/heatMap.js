@@ -94,11 +94,13 @@ function drawCalender(data, factory){
 					})
 					.object(data);
 
+	var data_min = d3.min(data, function(d){return d.value})
+	var data_max = d3.max(data, function(d){return d.value})
 	var scale = d3.scaleLinear()
 		.domain(d3.extent(data, function(d) { 
 			return parseInt(d.value); 
 		}))
-		.range([0, 1]); 
+		.range([0, 1.25]); 
 		
 	var tooltipHtml = d =>  "Date: " + titleFormat(new Date(d)) + 
 					"<br>Reading:  " + reading[d]/100; 
