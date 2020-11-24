@@ -3,10 +3,10 @@ export {drawViolinPlot}
 var violinSvg;
 var filteredData;
 var months=["January", "February", "March", "April", "May","June","July", "August", "September", "October", "November","December"];
-var margin = {top: 10, right: 30, bottom: 50, left: 40};
+var margin = {top: 10, right: 30, bottom: 74, left: 40};
 var width = 460 - margin.left - margin.right;
-var height = 500 - margin.top - margin.bottom;
-function drawViolinPlot(data,Chemical)
+var height = 524 - margin.top - margin.bottom;
+function drawViolinPlot(data,Chemical, sensor_no)
 {
     //filtering out the data first
     filteredData= data.filter(function (d) { return d.Chemical==Chemical})
@@ -136,12 +136,18 @@ function drawViolinPlot(data,Chemical)
         .style("text-anchor", "middle")
         .text(Chemical+ " Reading Value");
     violinSvg.append("text")
-        .attr("transform", "translate(" + (width / 2) + " ," + (height - (margin.bottom -85)) + ")")
+        .attr("transform", "translate(" + (width / 2) + " ," + (height - (margin.bottom-110)) + ")")
         .style("text-anchor", "middle")
         .style("font-weight", "700" )
         .style("font-size", "12px")
         .attr("font-family","sans-serif")
         .text("Months");
+    violinSvg.append("text")
+        .attr("transform", "translate(" + (width/2+40) + " ," + (height - (margin.bottom-140)) + ")")
+        .style("fill","gray")
+        .style("font-size","15px")
+        .style("font-family","Segoe UI")
+        .text("Showing data for sensor "+sensor_no);
 
 }
 function outliers(filteredData)

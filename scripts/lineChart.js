@@ -46,6 +46,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 function clear() {
     d3.select(".line-svg").selectAll("*").remove();
+    d3.select("#violinSvg").remove();
     svg = d3
       .select(".line-svg")
       .append("svg")
@@ -168,7 +169,7 @@ function drawLineChart(monthName,sensor) {
                 .style("opacity", 0);
         })
         .on("click", function(d) { 
-            drawViolinPlot(sensorData,'AGOC-3A')
+            drawViolinPlot(sensorData,'AGOC-3A',sensor_no)
         });
 
     svg.append('svg:path')
@@ -204,7 +205,7 @@ function drawLineChart(monthName,sensor) {
                 .style("opacity", 0);
         })
         .on("click", function(d) { 
-            drawViolinPlot(sensorData,'Appluimonia')
+            drawViolinPlot(sensorData,'Appluimonia',sensor_no)
         });
 
     svg.append('svg:path')
@@ -240,7 +241,7 @@ function drawLineChart(monthName,sensor) {
                 .style("opacity", 0);
         })
         .on("click", function(d) { 
-            drawViolinPlot(sensorData,'Chlorodinine')
+            drawViolinPlot(sensorData,'Chlorodinine',sensor_no)
         });
 
     svg.append('svg:path')
@@ -275,7 +276,7 @@ function drawLineChart(monthName,sensor) {
                 .style("opacity", 0);
         })
         .on("click", function(d) { 
-            drawViolinPlot(sensorData,'Methylosmolene')
+            drawViolinPlot(sensorData,'Methylosmolene',sensor_no)
         });
 
 

@@ -44,6 +44,8 @@ svg {
   display:flex;
   justify-content: flex-end;
   padding-right: 10px;
+  font-size: 15px;
+  color: gray;
 }
 html {
   font-family: 'Trebuchet MS', sans-serif;
