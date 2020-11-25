@@ -97,7 +97,6 @@ function loadData() {
     });
 }
 
-// Draw the map in the #map svg
 function drawScatterPlot() {
     scatterPlotSvg.selectAll("*").remove()
     
@@ -403,8 +402,18 @@ function drawCalender(){
             .attr("stroke", "black")  
         })
     .on('click', function (d, i) {
-              console.log(d3.select(this).select("text").text(), d3.select(".month-name").text())
+            var dateFromCalender = new Date(2016, +document.getElementById("months-innovative_dataviz").value, +d3.select(this).select("text").text(),1);
+            var temp = []
+            windData.forEach(function(d,i){
+                if (new Date(d["Date Time "]).getTime() ===  dateFromCalender.getTime()){
+                    temp.push(i);
+                }
+            })
+            stopAnimation()
+            ind = temp[0];
+            toggleAnimation()
         })
+
   dayNums
       .attr("x", columns.bandwidth() / 2)
       .attr("y", rows.bandwidth() / 2);
