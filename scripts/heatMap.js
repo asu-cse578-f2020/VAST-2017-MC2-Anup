@@ -12,7 +12,8 @@ var div = d3.select("body")
 var chemical;
 var margin = { top: 10, right: 10, bottom: 10, left: 10 }
 var width = 475 - margin.left - margin.right
-var height = 250 - margin.top - margin.bottom
+var height = 275 - margin.top - margin.bottom
+var barHeight = 20;
 
 function drawHeatMap(data, factory){
 
@@ -22,7 +23,7 @@ function drawHeatMap(data, factory){
 	heatMapSvg = d3.select("#heatmap").append("svg")
 					.attr("id", "heatMapSvg")
 					.attr("width", width + margin.left + margin.right)
-					.attr("height", height + margin.top + margin.bottom)
+					.attr("height", height + margin.top + margin.bottom + barHeight)
 					.attr("transform", `translate(0, ${margin.top})`)
 
     //factory = d3.select("#factory").node().value;
@@ -56,8 +57,8 @@ function drawHeatMap(data, factory){
 	for(var _key in heatMapData){
 		data.push({
 			'day': _key,
-			'value': parseInt((+heatMapData[_key][0]['total_reading'] / 
-								+heatMapData[_key][0]['count'])*100)
+			'value': (+heatMapData[_key][0]['total_reading'] / 
+								+heatMapData[_key][0]['count'])
 		})
 	}
 
@@ -89,21 +90,23 @@ function drawCalender(data, factory){
 					})
 					.rollup(function(leaves) {
 						return d3.sum(leaves, function(d){ 
-							return parseInt(d.value); 
+							return (d.value); 
 						});
 					})
 					.object(data);
-
+	
+	var color = d3.interpolateViridis;
 	var data_min = d3.min(data, function(d){return d.value})
 	var data_max = d3.max(data, function(d){return d.value})
+	var extent = d3.extent(data, function(d) { 
+		return (d.value); 
+	});
 	var scale = d3.scaleLinear()
-		.domain(d3.extent(data, function(d) { 
-			return parseInt(d.value); 
-		}))
+		.domain(extent)
 		.range([0, 1.25]); 
 		
 	var tooltipHtml = d =>  "Date: " + titleFormat(new Date(d)) + 
-					"<br>Reading:  " + reading[d]/100; 
+					"<br>Reading:  " + reading[d].toFixed(2); 
 
 	var calenderWidth = function(d) {
 		var columns = weeksInMonth(d);
@@ -118,7 +121,7 @@ function drawCalender(data, factory){
 					.attr("class", "month")
 					.attr("height", calenderHeight)
 					.attr("width", function(d) {return calenderWidth(d);})
-					.attr("transform", (d,i)=>`translate(${i*calenderWidth(d)}, ${0})`)
+					.attr("transform", (d,i)=>`translate(${i*calenderWidth(d)}, ${barHeight+25})`)
 					.append("g")
 
 	calender.append("text")
@@ -157,7 +160,7 @@ function drawCalender(data, factory){
 		.filter(function(d) { 
 			return d in reading; 
 		})
-		.style("fill", function(d) { return d3.interpolateYlOrRd(scale(reading[d])); })
+		.style("fill", function(d) { return color(scale(reading[d])); })
 		.on("mouseover", function(d) {
 			d3.select(this)
 				.style('stroke', 'black')
@@ -189,6 +192,42 @@ function drawCalender(data, factory){
 				.duration(50)
 				.style("opacity", 0);
 		});
+
+	// draw legend of the map
+    var defs = heatMapSvg.append("defs");
+	var linearGradient = defs.append("linearGradient").attr("id", "linear-gradient");
+	var colorScale = d3.scaleSequential(color).domain(extent);
+
+    linearGradient.selectAll("stop")
+        .data(colorScale.ticks().map((t, i, n) => ({
+            offset: `${100*i/n.length}%`,
+            color: colorScale(t)
+        })))
+        .enter().append("stop")
+        .attr("offset", d => d.offset)
+        .attr("stop-color", d => d.color);
+
+	var axisScale = d3.scaleLinear()
+	.domain(colorScale.domain())
+	.range([margin.left, width - margin.right - margin.left]);
+
+    var axisBottom = g => g
+        .attr("class", `x-axis`)
+        .attr("transform", `translate(0, 25)`)
+        .call(d3.axisBottom(axisScale)
+            .ticks(width / 75)
+            .tickSize(-barHeight));
+
+    heatMapSvg.append('g')
+        .attr("transform", `translate(0,${25-barHeight})`)
+        .append("rect")
+        .attr('transform', `translate(${margin.left}, 0)`)
+        .attr("width", width - margin.right - margin.left)
+        .attr("height", barHeight)
+        .style("fill", "url(#linear-gradient)");
+
+    heatMapSvg.append('g')
+        .call(axisBottom);
 
 	// chart title
 	d3.select("#heatmap").append("text")
