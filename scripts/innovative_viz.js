@@ -56,8 +56,8 @@ const t = d3.transition().duration(100)
 const colorScale = d3.scaleOrdinal()
     .range(d3.schemeCategory10);
 
-const colorScaleEmissions =  d3.scaleSequential()
-                  .interpolator(d3.interpolateGreys);
+const colorScaleEmissions = d3.scaleSequential()
+    .interpolator(d3.interpolateGreys);
 
 var running = false;
 var timer;
@@ -66,6 +66,8 @@ const day = 86400000;
 const now = new Date(2016, 0);
 const year = now.getFullYear();
 let calender_data = [];
+
+var windG = null
 
 var windLines = [];
 
@@ -104,17 +106,22 @@ function loadData() {
 
         prepareWindData()
 
-        scatterPlotSvg.selectAll('line')
+        windG = scatterPlotSvg.append('g')
+
+        windG.selectAll('line')
             .data(windLines)
             .enter()
             .append("line")
             .attr('x1', function (d) { return x(d.x0) })
             .attr('y1', function (d) { return y(d.y0) })
             .attr('class', 'gaugeChart-needle')
-            .attr('stroke-width', 1)
-            .attr("stroke", "black")
+            .attr('stroke-width', 0.5)
+            .attr("stroke", "#D3D3D3")
             .attr("marker-end", "url(#triangle)")
-            .call(lineAnimate);
+            .call(lineAnimate)
+            .attr("transform", d => 'rotate(' + windData[ind]['direction'] + ' ' + x(d.x0) + ' ' + y(d.y0) + ')');
+
+
     });
 
     // On chemical change call heat map for new chemical
@@ -129,94 +136,27 @@ function loadData() {
 function prepareWindData() {
     var windSpeed = windData[ind].speed
 
+    var xCoord = [40, 50, 60, 70, 80, 90, 100]
+    var yCoord = [0, 10, 20, 30]
+    var windDelay = [200, 400, 600, 800]
+
     windLines = []
     // y = x
 
-    windLines.push({
-        x0: 20,
-        y0: 20,
-        x1: 23,
-        y1: 23,
-        s: windSpeed,
-        duration: 50 / windSpeed, /* pre-compute duration */
-        delay: 100 /* pre-compute delay */
-    })
-
-    windLines.push({
-        x0: 25,
-        y0: 25,
-        x1: 28,
-        y1: 28,
-        s: windSpeed,
-        duration: 50 / windSpeed, /* pre-compute duration */
-        delay: 200 /* pre-compute delay */
-    })
-
-    windLines.push({
-        x0: 30,
-        y0: 30,
-        x1: 33,
-        y1: 33,
-        s: windSpeed,
-        duration: 50 / windSpeed, /* pre-compute duration */
-        delay: 300 /* pre-compute delay */
-    })
-
-    windLines.push({
-        x0: 35,
-        y0: 35,
-        x1: 38,
-        y1: 38,
-        s: windSpeed,
-        duration: 50 / windSpeed, /* pre-compute duration */
-        delay: 400 /* pre-compute delay */
-    })
-
-    
-
-    // y = x - 7
-
-    windLines.push({
-        x0: 20,
-        y0: 13,
-        x1: 23,
-        y1: 16,
-        s: windSpeed,
-        duration: 50 / windSpeed, /* pre-compute duration */
-        delay: 100 /* pre-compute delay */
-    })
-
-    windLines.push({
-        x0: 25,
-        y0: 18,
-        x1: 28,
-        y1: 21,
-        s: windSpeed,
-        duration: 50 / windSpeed, /* pre-compute duration */
-        delay: 200 /* pre-compute delay */
-    })
-
-    windLines.push({
-        x0: 30,
-        y0: 23,
-        x1: 33,
-        y1: 26,
-        s: windSpeed,
-        duration: 50 / windSpeed, /* pre-compute duration */
-        delay: 300 /* pre-compute delay */
-    })
-
-    windLines.push({
-        x0: 35,
-        y0: 28,
-        x1: 38,
-        y1: 31,
-        s: windSpeed,
-        duration: 50 / windSpeed, /* pre-compute duration */
-        delay: 400 /* pre-compute delay */
-    })
-
-    
+    for (var i = 0; i < xCoord.length; i++) {
+        for (var j = 0; j < yCoord.length; j++) {
+            var line = {
+                x0: xCoord[i],
+                y0: yCoord[j],
+                x1: xCoord[i],
+                y1: yCoord[j] + 2,
+                s: windSpeed,
+                duration: 1000 / windSpeed, /* pre-compute duration */
+                delay: windDelay[j] /* pre-compute delay */
+            }
+            windLines.push(line)
+        }
+    }
 }
 
 function lineAnimate(selection) {
@@ -230,7 +170,7 @@ function lineAnimate(selection) {
         .delay(function (d) { return d.delay; })
         .attr('x2', function (d) { return x(d.x1) })
         .attr('y2', function (d) { return y(d.y1) })
-        .style('opacity', 0.8)
+        .style('opacity', 0.4)
         .transition()
         .duration(800)
         .style('opacity', 0.1)
@@ -270,16 +210,16 @@ function drawScatterPlot() {
         })
 
     sensorFactories.on('mouseover', function (d, i) {
-            var displayText = d.name;
-            if (d.type == 'sensor') {
-                displayText = "Sensor " + displayText
-            }
+        var displayText = d.name;
+        if (d.type == 'sensor') {
+            displayText = "Sensor " + displayText
+        }
 
-            tooltip.style("opacity", 1);
-            tooltip.html(displayText)
-                .style("left", (d3.event.pageX + 10) + "px")
-                .style("top", (d3.event.pageY - 15) + "px");
-        })
+        tooltip.style("opacity", 1);
+        tooltip.html(displayText)
+            .style("left", (d3.event.pageX + 10) + "px")
+            .style("top", (d3.event.pageY - 15) + "px");
+    })
         .on('mouseout', function (d, i) {
             tooltip.style("opacity", 0);
         })
@@ -320,22 +260,23 @@ function drawScatterPlot() {
         d3.select("#yearEntry").property("value", ind)
         curDateBg.text(windData[ind]['Date Time '])
 
-    drawCompass([windData[ind]])
 
-    scatterPlotSvg
-        .selectAll(".smoke")
-        .transition()
-        .attr('r', '0px')
-        .remove()
+        scatterPlotSvg
+            .selectAll(".smoke")
+            .transition()
+            .attr('r', '0px')
+            .remove()
 
-    drawSmoke()
+        drawSmoke()
 
-    levels+=1
-    if (levels == 3)
-    {
-        levels = 0
-    }
+        levels += 1
+        if (levels == 3) {
+            levels = 0
+        }
 
+        console.log(windData[ind]['direction'])
+        windG.attr("transform", d => 'rotate(' + (windData[ind]['direction'] - 180) + ')');
+        drawCompass([windData[ind]])
     })
 
 }
@@ -454,12 +395,12 @@ function circleTransitions() {
 
         drawSmoke()
 
-        levels+=1
-        if (levels == 3)
-        {
+        levels += 1
+        if (levels == 3) {
             levels = 0
         }
 
+        windG.attr("transform", d => 'rotate(' + (windData[ind]['direction'] - 180) + ')');
     }
     else if (ind == windData.length - 1) {
         ind = 0;
@@ -564,45 +505,45 @@ function drawCalender() {
         .attr("width", columns.bandwidth())
         .attr("height", rows.bandwidth())
 
-  dayRects
-      .attr("width", columns.bandwidth())
-      .attr("height", rows.bandwidth())
-   
-  days
-      .on('mouseover', function (d, i) {
-        if ([1,2,3,4].includes(+d3.select(this).select("text").text()) && +document.getElementById("months-innovative_dataviz").value == 7){
-        }
-        else{
-            d3.select(this).select("text")
-            .style("stroke-width", 1)
-            .attr("stroke", "red")
-        }
-        })
-    .on('mouseout', function (d, i) {
-        if ([1,2,3,4].includes(+d3.select(this).select("text").text()) && +document.getElementById("months-innovative_dataviz").value == 7){
-        }
-        else{
-            d3.select(this).select("text")
-            .style("stroke-width", 0)
-            .attr("stroke", "black")  
-        }
-        })
-    .on('click', function (d, i) {
-        if ([1,2,3,4].includes(+d3.select(this).select("text").text()) && +document.getElementById("months-innovative_dataviz").value == 7){
+    dayRects
+        .attr("width", columns.bandwidth())
+        .attr("height", rows.bandwidth())
 
-        }
-        else{
-            var dateFromCalender = new Date(2016, +document.getElementById("months-innovative_dataviz").value, +d3.select(this).select("text").text(),1);
-            var temp = []
-            windData.forEach(function (d, i) {
-                if (new Date(d["Date Time "]).getTime() === dateFromCalender.getTime()) {
-                    temp.push(i);
-                }
-            })
-            stopAnimation()
-            ind = temp[0];
-            toggleAnimation()
-        }
+    days
+        .on('mouseover', function (d, i) {
+            if ([1, 2, 3, 4].includes(+d3.select(this).select("text").text()) && +document.getElementById("months-innovative_dataviz").value == 7) {
+            }
+            else {
+                d3.select(this).select("text")
+                    .style("stroke-width", 1)
+                    .attr("stroke", "red")
+            }
+        })
+        .on('mouseout', function (d, i) {
+            if ([1, 2, 3, 4].includes(+d3.select(this).select("text").text()) && +document.getElementById("months-innovative_dataviz").value == 7) {
+            }
+            else {
+                d3.select(this).select("text")
+                    .style("stroke-width", 0)
+                    .attr("stroke", "black")
+            }
+        })
+        .on('click', function (d, i) {
+            if ([1, 2, 3, 4].includes(+d3.select(this).select("text").text()) && +document.getElementById("months-innovative_dataviz").value == 7) {
+
+            }
+            else {
+                var dateFromCalender = new Date(2016, +document.getElementById("months-innovative_dataviz").value, +d3.select(this).select("text").text(), 1);
+                var temp = []
+                windData.forEach(function (d, i) {
+                    if (new Date(d["Date Time "]).getTime() === dateFromCalender.getTime()) {
+                        temp.push(i);
+                    }
+                })
+                stopAnimation()
+                ind = temp[0];
+                toggleAnimation()
+            }
         })
 
     dayNums
@@ -644,11 +585,10 @@ function calcHull(days) {
         points.push([r0x0min, r1y0]);
     }
 
-  return points;
+    return points;
 }
 
-function drawSmoke()
-{
+function drawSmoke() {
 
     scatterPlotSvg.append("g")
         .selectAll("path")
@@ -658,9 +598,9 @@ function drawSmoke()
         .attr('class', 'smoke')
         .attr('cx', function (d) { return x(d.x - 28) })
         .attr('cy', function (d) { return y(d.y - 2) })
-        .attr('r','10px')
+        .attr('r', '10px')
         .attr('opacity', '0.8')
-        .style('fill', function (d) { return colorScaleEmissions(factoryEmissions[ind][d['name']])})
+        .style('fill', function (d) { return colorScaleEmissions(factoryEmissions[ind][d['name']]) })
 
     if (levels > 0) {
         scatterPlotSvg.append("g")
@@ -671,9 +611,9 @@ function drawSmoke()
             .attr('class', 'smoke')
             .attr('cx', function (d) { return x(d.x - 28.5) })
             .attr('cy', function (d) { return y(d.y - 1) })
-            .attr('r','10px')
+            .attr('r', '10px')
             .attr('opacity', '0.8')
-            .style('fill', function (d) { return colorScaleEmissions(factoryEmissions[ind][d['name']])})
+            .style('fill', function (d) { return colorScaleEmissions(factoryEmissions[ind][d['name']]) })
 
         scatterPlotSvg.append("g")
             .selectAll("path")
@@ -683,9 +623,9 @@ function drawSmoke()
             .attr('class', 'smoke')
             .attr('cx', function (d) { return x(d.x - 27.5) })
             .attr('cy', function (d) { return y(d.y - 1) })
-            .attr('r','10px')
+            .attr('r', '10px')
             .attr('opacity', '0.8')
-            .style('fill', function (d) { return colorScaleEmissions(factoryEmissions[ind][d['name']])})
+            .style('fill', function (d) { return colorScaleEmissions(factoryEmissions[ind][d['name']]) })
     }
 
     if (levels > 1) {
@@ -697,9 +637,9 @@ function drawSmoke()
             .attr('class', 'smoke')
             .attr('cx', function (d) { return x(d.x - 28.5) })
             .attr('cy', function (d) { return y(d.y) })
-            .attr('r','10px')
+            .attr('r', '10px')
             .attr('opacity', '0.8')
-            .style('fill', function (d) { return colorScaleEmissions(factoryEmissions[ind][d['name']])})
+            .style('fill', function (d) { return colorScaleEmissions(factoryEmissions[ind][d['name']]) })
 
         scatterPlotSvg.append("g")
             .selectAll("path")
@@ -709,9 +649,9 @@ function drawSmoke()
             .attr('class', 'smoke')
             .attr('cx', function (d) { return x(d.x - 27.5) })
             .attr('cy', function (d) { return y(d.y) })
-            .attr('r','10px')
+            .attr('r', '10px')
             .attr('opacity', '0.8')
-            .style('fill', function (d) { return colorScaleEmissions(factoryEmissions[ind][d['name']])})
+            .style('fill', function (d) { return colorScaleEmissions(factoryEmissions[ind][d['name']]) })
 
         scatterPlotSvg.append("g")
             .selectAll("path")
@@ -721,9 +661,9 @@ function drawSmoke()
             .attr('class', 'smoke')
             .attr('cx', function (d) { return x(d.x - 29) })
             .attr('cy', function (d) { return y(d.y) })
-            .attr('r','10px')
+            .attr('r', '10px')
             .attr('opacity', '0.8')
-            .style('fill', function (d) { return colorScaleEmissions(factoryEmissions[ind][d['name']])})
+            .style('fill', function (d) { return colorScaleEmissions(factoryEmissions[ind][d['name']]) })
 
         scatterPlotSvg.append("g")
             .selectAll("path")
@@ -733,9 +673,9 @@ function drawSmoke()
             .attr('class', 'smoke')
             .attr('cx', function (d) { return x(d.x - 27) })
             .attr('cy', function (d) { return y(d.y) })
-            .attr('r','10px')
+            .attr('r', '10px')
             .attr('opacity', '0.8')
-            .style('fill', function (d) { return colorScaleEmissions(factoryEmissions[ind][d['name']])})
+            .style('fill', function (d) { return colorScaleEmissions(factoryEmissions[ind][d['name']]) })
     }
 
 }
