@@ -77,23 +77,6 @@ function drawInitialViz() {
     loadData()
 }
 
-function lineAnimate(selection) {
-    selection
-        .attr('x2', function (d) { return d.x1 })
-        .attr('y2', function (d) { return d.y1 })
-        .style('opacity', 0)
-        .transition()
-        .duration(function (d) { return d.duration; })
-        .delay(function (d) { return d.delay; })
-        .attr('x2', function (d) { return d.x1 })
-        .attr('y2', function (d) { return d.y1 })
-        .style('opacity', 0.8)
-        .transition()
-        .duration(1000)
-        .style('opacity', 0.1)
-        .on('end', function () { d3.select(this).call(lineAnimate) });
-}
-
 function loadData() {
     Promise.all([d3.csv('data/sensor_locations.csv'),
     d3.csv('data/windData.csv'),
@@ -125,8 +108,12 @@ function loadData() {
             .data(windLines)
             .enter()
             .append("line")
-            .attr('x1', function (d) { return d.x0 })
-            .attr('y1', function (d) { return d.y0 })
+            .attr('x1', function (d) { return x(d.x0) })
+            .attr('y1', function (d) { return y(d.y0) })
+            .attr('class', 'gaugeChart-needle')
+            .attr('stroke-width', 1)
+            .attr("stroke", "black")
+            .attr("marker-end", "url(#triangle)")
             .call(lineAnimate);
     });
 
@@ -142,23 +129,113 @@ function loadData() {
 function prepareWindData() {
     var windSpeed = windData[ind].speed
 
-    windData = []
-    data.forEach(value => {
-        var line = {
-            x0: value.x,
-            y0: value.y,
-            x1: value.x + 5,
-            y1: value.x + 5,
-            s: windSpeed,
-            // f: feelsLikeTemperature,
-            duration: 8000 / windSpeed, /* pre-compute duration */
-            delay: Math.random() * 1000 /* pre-compute delay */
-        };
+    windLines = []
+    // y = x
 
-        windLines.push(line)
+    windLines.push({
+        x0: 20,
+        y0: 20,
+        x1: 23,
+        y1: 23,
+        s: windSpeed,
+        duration: 50 / windSpeed, /* pre-compute duration */
+        delay: 100 /* pre-compute delay */
     })
+
+    windLines.push({
+        x0: 25,
+        y0: 25,
+        x1: 28,
+        y1: 28,
+        s: windSpeed,
+        duration: 50 / windSpeed, /* pre-compute duration */
+        delay: 200 /* pre-compute delay */
+    })
+
+    windLines.push({
+        x0: 30,
+        y0: 30,
+        x1: 33,
+        y1: 33,
+        s: windSpeed,
+        duration: 50 / windSpeed, /* pre-compute duration */
+        delay: 300 /* pre-compute delay */
+    })
+
+    windLines.push({
+        x0: 35,
+        y0: 35,
+        x1: 38,
+        y1: 38,
+        s: windSpeed,
+        duration: 50 / windSpeed, /* pre-compute duration */
+        delay: 400 /* pre-compute delay */
+    })
+
+    
+
+    // y = x - 7
+
+    windLines.push({
+        x0: 20,
+        y0: 13,
+        x1: 23,
+        y1: 16,
+        s: windSpeed,
+        duration: 50 / windSpeed, /* pre-compute duration */
+        delay: 100 /* pre-compute delay */
+    })
+
+    windLines.push({
+        x0: 25,
+        y0: 18,
+        x1: 28,
+        y1: 21,
+        s: windSpeed,
+        duration: 50 / windSpeed, /* pre-compute duration */
+        delay: 200 /* pre-compute delay */
+    })
+
+    windLines.push({
+        x0: 30,
+        y0: 23,
+        x1: 33,
+        y1: 26,
+        s: windSpeed,
+        duration: 50 / windSpeed, /* pre-compute duration */
+        delay: 300 /* pre-compute delay */
+    })
+
+    windLines.push({
+        x0: 35,
+        y0: 28,
+        x1: 38,
+        y1: 31,
+        s: windSpeed,
+        duration: 50 / windSpeed, /* pre-compute duration */
+        delay: 400 /* pre-compute delay */
+    })
+
+    
 }
 
+function lineAnimate(selection) {
+    selection
+        .attr('x2', function (d) { return x(d.x1) })
+        .attr('y2', function (d) { return y(d.y1) })
+        .style('opacity', 0)
+        .transition()
+        .ease(d3.easeLinear)
+        .duration(function (d) { return d.duration; })
+        .delay(function (d) { return d.delay; })
+        .attr('x2', function (d) { return x(d.x1) })
+        .attr('y2', function (d) { return y(d.y1) })
+        .style('opacity', 0.8)
+        .transition()
+        .duration(800)
+        .style('opacity', 0.1)
+        .on('end', function () { d3.select(this).call(lineAnimate) });
+}
 
 function drawScatterPlot() {
     scatterPlotSvg.selectAll("*").remove()
@@ -185,7 +262,7 @@ function drawScatterPlot() {
         .attr("transform", d => `translate(${x(d.x - 30)},${y(d.y - 2)})`)
         .attr("fill", d => colorScale(d.type))
         .attr("xlink:href", d => {
-            if(d.type == 'sensor') {
+            if (d.type == 'sensor') {
                 return '../images/warning.png'
             } else {
                 return '../images/factory.png'
