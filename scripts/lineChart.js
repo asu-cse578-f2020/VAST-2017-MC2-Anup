@@ -313,7 +313,7 @@ function drawLineChart(monthName,sensor) {
         .style("font-weight", "bold") 
         .style("font-family", "sans-serif") 
         .style("text-decoration", "underline")  
-        .text("Chemical Readings vs Time");    
+        .text("Chemical Readings vs Time (Sensor " +sensor_no +")");    
 }
 
 
