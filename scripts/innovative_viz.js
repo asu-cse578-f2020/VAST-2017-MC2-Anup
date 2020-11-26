@@ -113,7 +113,7 @@ function drawScatterPlot() {
 
     var shape = d3.scaleOrdinal(data.map(d => d.type), d3.symbols.map(s => symbol.type(s)()))
 
-    scatterPlotSvg.append("g")
+    var sensorFactories = scatterPlotSvg.append("g")
         .attr("stroke-width", 1.5)
         .attr("font-family", "sans-serif")
         .attr("font-size", 10)
@@ -130,8 +130,7 @@ function drawScatterPlot() {
             }
         })
 
-    scatterPlotSvg.selectAll('path')
-        .on('mouseover', function (d, i) {
+    sensorFactories.on('mouseover', function (d, i) {
             var displayText = d.name;
             if (d.type == 'sensor') {
                 displayText = "Sensor " + displayText
@@ -259,7 +258,6 @@ function enterCompass(enter, t) {
         .style("fill", "black")
 
     glyph.append('line')
-        .attr('class', 'gaugeChart-needle')
         .attr("x1", 100)
         .attr("y1", 145)
         .attr("x2", 100)
