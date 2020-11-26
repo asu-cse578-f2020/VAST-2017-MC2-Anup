@@ -119,10 +119,16 @@ function drawScatterPlot() {
         .attr("font-size", 10)
         .selectAll("path")
         .data(data)
-        .join("path")
-        .attr("transform", d => `translate(${x(d.x - 30)},${y(d.y - 5)})`)
+        .join("image")
+        .attr("transform", d => `translate(${x(d.x - 30)},${y(d.y - 2)})`)
         .attr("fill", d => colorScale(d.type))
-        .attr("d", d => shape(d.type));
+        .attr("xlink:href", d => {
+            if(d.type == 'sensor') {
+                return '../images/warning.png'
+            } else {
+                return '../images/factory.png'
+            }
+        })
 
     scatterPlotSvg.selectAll('path')
         .on('mouseover', function (d, i) {
