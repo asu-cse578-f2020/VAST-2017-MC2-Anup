@@ -63,9 +63,11 @@ var running = false;
 var timer;
 
 const day = 86400000;
-const now = new Date(2016,0);
+const now = new Date(2016, 0);
 const year = now.getFullYear();
 let calender_data = [];
+
+var windLines = [];
 
 document.addEventListener('DOMContentLoaded', function () {
     drawInitialViz()
@@ -73,6 +75,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function drawInitialViz() {
     loadData()
+}
+
+function lineAnimate(selection) {
+    selection
+        .attr('x2', function (d) { return d.x1 })
+        .attr('y2', function (d) { return d.y1 })
+        .style('opacity', 0)
+        .transition()
+        .duration(function (d) { return d.duration; })
+        .delay(function (d) { return d.delay; })
+        .attr('x2', function (d) { return d.x1 })
+        .attr('y2', function (d) { return d.y1 })
+        .style('opacity', 0.8)
+        .transition()
+        .duration(1000)
+        .style('opacity', 0.1)
+        .on('end', function () { d3.select(this).call(lineAnimate) });
 }
 
 function loadData() {
@@ -99,6 +118,16 @@ function loadData() {
         // drawCircles()
         drawScatterPlot()
         drawCompass([windData[ind]])
+
+        prepareWindData()
+
+        scatterPlotSvg.selectAll('line')
+            .data(windLines)
+            .enter()
+            .append("line")
+            .attr('x1', function (d) { return d.x0 })
+            .attr('y1', function (d) { return d.y0 })
+            .call(lineAnimate);
     });
 
     // On chemical change call heat map for new chemical
@@ -110,9 +139,30 @@ function loadData() {
     });
 }
 
+function prepareWindData() {
+    var windSpeed = windData[ind].speed
+
+    windData = []
+    data.forEach(value => {
+        var line = {
+            x0: value.x,
+            y0: value.y,
+            x1: value.x + 5,
+            y1: value.x + 5,
+            s: windSpeed,
+            // f: feelsLikeTemperature,
+            duration: 8000 / windSpeed, /* pre-compute duration */
+            delay: Math.random() * 1000 /* pre-compute delay */
+        };
+
+        windLines.push(line)
+    })
+}
+
+
 function drawScatterPlot() {
     scatterPlotSvg.selectAll("*").remove()
-    
+
     scatterPlotSvg.append("text")
         .attr("x", (scatterPlotWidth / 2))
         .attr("y", 10 - (scatterPlotMargin.top / 2))
@@ -173,21 +223,21 @@ function drawScatterPlot() {
             window.scrollTo({ top: 2000, behavior: 'smooth' });
         })
 
-    makeMonth(+document.getElementById("months-innovative_dataviz").value,year);
+    makeMonth(+document.getElementById("months-innovative_dataviz").value, year);
     drawCalender()
 
     curDateBg = scatterPlotSvg
         .append("text")
         .attr("class", "curDateBg")
-        .attr("x", width/2-200)
-        .attr("y", height/2+70)
+        .attr("x", width / 2 - 200)
+        .attr("y", height / 2 + 70)
         .attr("font-size", "16px")
-        .attr("text-anchor",  "middle")
+        .attr("text-anchor", "middle")
         .attr("opacity", 0.5)
         .style("pointer-events", "none")
         .text(windData[ind]['Date Time '])
 
-    d3.select("#dateSlider").on("change", function(d){
+    d3.select("#dateSlider").on("change", function (d) {
         ind = +this.value
         d3.select("#yearEntry").attr("value", ind)
         d3.select("#yearEntry").property("value", ind)
@@ -312,7 +362,7 @@ function toggleAnimation() {
 function circleTransitions() {
     if (d3.select('.playPause').attr('value') == 'Stop' && ind < windData.length - 1) {
         ind = ind + 1;
-        
+
         curDateBg.text(windData[ind]['Date Time '])
         d3.select("#dateSlider").attr("value", ind)
         d3.select("#dateSlider").property("value", ind)
@@ -341,33 +391,33 @@ function circleTransitions() {
     else stopAnimation();
 }
 
-function makeMonth(month, year){
-  const monthDays = [];
-  let loopMonth = month;
-  let loopDay = 0;
-  let loopDate = new Date(year, loopMonth, loopDay);
-  let loopStartDay = loopDate.getDay();
-  while (loopMonth === month){
-    monthDays.push({date: loopDate, col: loopDate.getDay(), row: Math.floor((loopDate.getDate() + loopStartDay) / 7)});
-    
-    loopDate = new Date(loopDate.getTime() + day);
-    loopMonth = loopDate.getMonth();
-  }
+function makeMonth(month, year) {
+    const monthDays = [];
+    let loopMonth = month;
+    let loopDay = 0;
+    let loopDate = new Date(year, loopMonth, loopDay);
+    let loopStartDay = loopDate.getDay();
+    while (loopMonth === month) {
+        monthDays.push({ date: loopDate, col: loopDate.getDay(), row: Math.floor((loopDate.getDate() + loopStartDay) / 7) });
 
-  if (monthDays[0].date.getDate() > 1){
-    monthDays.shift();
-  }
-  if (monthDays[0].row > 0){
-    monthDays.forEach(d => {
-      --d.row;
-      return d;
-    });
-  }
+        loopDate = new Date(loopDate.getTime() + day);
+        loopMonth = loopDate.getMonth();
+    }
 
-  calender_data={month, days: monthDays};
+    if (monthDays[0].date.getDate() > 1) {
+        monthDays.shift();
+    }
+    if (monthDays[0].row > 0) {
+        monthDays.forEach(d => {
+            --d.row;
+            return d;
+        });
+    }
+
+    calender_data = { month, days: monthDays };
 }
 
-function drawCalender(){
+function drawCalender() {
     const g = scatterPlotSvg.append("g");
 
     const outlines = g.append("polygon")
@@ -383,13 +433,13 @@ function drawCalender(){
 
     const days = g.selectAll(".day")
         .data(calender_data.days)
-    .enter().append("g")
+        .enter().append("g")
         .attr("class", "day calender");
 
     const dayRects = days.append("rect")
-            .attr("class", "rect calender")
-            .attr("fill-opacity", 0)
-            .attr("stroke","black");
+        .attr("class", "rect calender")
+        .attr("fill-opacity", 0)
+        .attr("stroke", "black");
 
     const dayNums = days.append("text")
         .attr("class", "num calender")
@@ -399,39 +449,43 @@ function drawCalender(){
 
     const dayOfWeek = g.selectAll(".day-of-week")
         .data(["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"])
-    .enter().append("text")
+        .enter().append("text")
         .attr("class", "day-of-week calender")
         .attr("font-size", "13px")
         .attr("dy", -4)
         .attr("dx", -10)
         .text(d => d);
 
-  const width = 200
-  const height = 200
+    const width = 200
+    const height = 200
 
 
-  g.attr("transform", "translate(-50,50)");
+    g.attr("transform", "translate(-50,50)");
 
-  columns.range([0, width]);
+    columns.range([0, width]);
 
-  rows.range([0, height]);
+    rows.range([0, height]);
 
     calender_data.days.forEach(d => {
-      d.x0 = columns(d.col);
-      d.x1 = d.x0 + columns.bandwidth();
-      d.y0 = rows(d.row);
-      d.y1 = d.y0 + rows.bandwidth();
-      d.v0 = [d.x0, d.y0];
+        d.x0 = columns(d.col);
+        d.x1 = d.x0 + columns.bandwidth();
+        d.y0 = rows(d.row);
+        d.y1 = d.y0 + rows.bandwidth();
+        d.v0 = [d.x0, d.y0];
 
-      return d;
+        return d;
     });
 
 
-  dayOfWeek
-      .attr("x", (d, i) => columns(i) + columns.bandwidth() / 2);
+    dayOfWeek
+        .attr("x", (d, i) => columns(i) + columns.bandwidth() / 2);
 
-  days
-      .attr("transform", d => `translate(${d.v0})`);
+    days
+        .attr("transform", d => `translate(${d.v0})`);
+
+    dayRects
+        .attr("width", columns.bandwidth())
+        .attr("height", rows.bandwidth())
 
   dayRects
       .attr("width", columns.bandwidth())
@@ -463,8 +517,8 @@ function drawCalender(){
         else{
             var dateFromCalender = new Date(2016, +document.getElementById("months-innovative_dataviz").value, +d3.select(this).select("text").text(),1);
             var temp = []
-            windData.forEach(function(d,i){
-                if (new Date(d["Date Time "]).getTime() ===  dateFromCalender.getTime()){
+            windData.forEach(function (d, i) {
+                if (new Date(d["Date Time "]).getTime() === dateFromCalender.getTime()) {
                     temp.push(i);
                 }
             })
@@ -474,44 +528,44 @@ function drawCalender(){
         }
         })
 
-  dayNums
-      .attr("x", columns.bandwidth() / 2)
-      .attr("y", rows.bandwidth() / 2);
+    dayNums
+        .attr("x", columns.bandwidth() / 2)
+        .attr("y", rows.bandwidth() / 2);
 
-  outlines
-      .attr("points", calcHull);
+    outlines
+        .attr("points", calcHull);
 }
 
-function calcHull(days){
-  const x0min = d3.min(days, d => d.x0),
+function calcHull(days) {
+    const x0min = d3.min(days, d => d.x0),
         x1max = d3.max(days, d => d.x1),
         y0min = d3.min(days, d => d.y0),
         y1max = d3.max(days, d => d.y1);
 
-  const r0 = days.filter(f => f.row === 0),
+    const r0 = days.filter(f => f.row === 0),
         r0x0min = d3.min(r0, d => d.x0),
         r0x1max = d3.max(r0, d => d.x1);
 
-  const r4 = days.filter(f => f.row === 4),
+    const r4 = days.filter(f => f.row === 4),
         r4x1max = d3.max(r4, d => d.x1),
         r4x0min = d3.min(r4, d => d.x0);
 
-  let points = [[r0x0min, y0min], [r0x1max, y0min]];
+    let points = [[r0x0min, y0min], [r0x1max, y0min]];
 
-  if (r4x1max < x1max){
-    const r3y1 = days.filter(f => f.row === 3)[0].y1;
-    points.push([x1max, r3y1]);
-    points.push([r4x1max, r3y1]);
-  }
-  points.push([r4x1max, y1max]);
+    if (r4x1max < x1max) {
+        const r3y1 = days.filter(f => f.row === 3)[0].y1;
+        points.push([x1max, r3y1]);
+        points.push([r4x1max, r3y1]);
+    }
+    points.push([r4x1max, y1max]);
 
-  points.push([r4x0min, y1max]);
+    points.push([r4x0min, y1max]);
 
-  if (r0x0min > x0min){
-    const r1y0 = days.filter(f => f.row === 1)[0].y0;
-    points.push([x0min, r1y0]);
-    points.push([r0x0min, r1y0]);
-  }
+    if (r0x0min > x0min) {
+        const r1y0 = days.filter(f => f.row === 1)[0].y0;
+        points.push([x0min, r1y0]);
+        points.push([r0x0min, r1y0]);
+    }
 
   return points;
 }
