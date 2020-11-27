@@ -37,6 +37,7 @@ var data;
 var windData;
 var completeData;
 var smokeLocations;
+var factoryEmissions;
 
 var levels = 0;
 // svg elements
@@ -54,6 +55,9 @@ const t = d3.transition().duration(100)
 
 const colorScale = d3.scaleOrdinal()
     .range(d3.schemeCategory10);
+
+const colorScaleEmissions =  d3.scaleSequential()
+                  .interpolator(d3.interpolateGreys);
 
 var running = false;
 var timer;
@@ -74,11 +78,13 @@ function drawInitialViz() {
 function loadData() {
     Promise.all([d3.csv('data/sensor_locations.csv'),
     d3.csv('data/windData.csv'),
-    d3.csv('../data/complete_data.csv'), d3.csv('../data/smoke_locations.csv')]).then(function (values) {
+    d3.csv('../data/complete_data.csv'), d3.csv('../data/smoke_locations.csv'),
+    d3.csv('../data/factoryEmissions.csv')]).then(function (values) {
         data = values[0];
         windData = values[1];
         completeData = values[2];
         smokeLocations = values[3];
+        factoryEmissions = values[4];
 
         x.domain([0, d3.max(data, function (d) {
             return +d["x"];
@@ -87,6 +93,8 @@ function loadData() {
         y.domain([0, d3.max(data, function (d) {
             return +d["y"];
         })]);
+
+        colorScaleEmissions.domain([-50, 151.8132489])
 
         // drawCircles()
         drawScatterPlot()
@@ -185,23 +193,24 @@ function drawScatterPlot() {
         d3.select("#yearEntry").property("value", ind)
         curDateBg.text(windData[ind]['Date Time '])
 
-        drawCompass([windData[ind]])
+    drawCompass([windData[ind]])
 
-        scatterPlotSvg
-            .selectAll(".smoke")
-            .transition()
-            .attr('r', '0px')
-            .remove()
+    scatterPlotSvg
+        .selectAll(".smoke")
+        .transition()
+        .attr('r', '0px')
+        .remove()
 
-        drawSmoke()
+    drawSmoke()
 
-        levels+=1
-        if (levels == 3)
-        {
-            levels = 0
-        }
+    levels+=1
+    if (levels == 3)
+    {
+        levels = 0
+    }
 
-        })
+    })
+
 }
 
 function drawCompass(compassData) {
@@ -519,8 +528,8 @@ function drawSmoke()
         .attr('cx', function (d) { return x(d.x - 28) })
         .attr('cy', function (d) { return y(d.y - 2) })
         .attr('r','10px')
-        .attr('opacity', '0.3')
-        .style('fill', 'red')
+        .attr('opacity', '0.8')
+        .style('fill', function (d) { return colorScaleEmissions(factoryEmissions[ind][d['name']])})
 
     if (levels > 0) {
         scatterPlotSvg.append("g")
@@ -532,8 +541,8 @@ function drawSmoke()
             .attr('cx', function (d) { return x(d.x - 28.5) })
             .attr('cy', function (d) { return y(d.y - 1) })
             .attr('r','10px')
-            .attr('opacity', '0.3')
-            .style('fill', 'red')
+            .attr('opacity', '0.8')
+            .style('fill', function (d) { return colorScaleEmissions(factoryEmissions[ind][d['name']])})
 
         scatterPlotSvg.append("g")
             .selectAll("path")
@@ -544,8 +553,8 @@ function drawSmoke()
             .attr('cx', function (d) { return x(d.x - 27.5) })
             .attr('cy', function (d) { return y(d.y - 1) })
             .attr('r','10px')
-            .attr('opacity', '0.3')
-            .style('fill', 'red')
+            .attr('opacity', '0.8')
+            .style('fill', function (d) { return colorScaleEmissions(factoryEmissions[ind][d['name']])})
     }
 
     if (levels > 1) {
@@ -558,8 +567,8 @@ function drawSmoke()
             .attr('cx', function (d) { return x(d.x - 28.5) })
             .attr('cy', function (d) { return y(d.y) })
             .attr('r','10px')
-            .attr('opacity', '0.3')
-            .style('fill', 'red')
+            .attr('opacity', '0.8')
+            .style('fill', function (d) { return colorScaleEmissions(factoryEmissions[ind][d['name']])})
 
         scatterPlotSvg.append("g")
             .selectAll("path")
@@ -570,8 +579,8 @@ function drawSmoke()
             .attr('cx', function (d) { return x(d.x - 27.5) })
             .attr('cy', function (d) { return y(d.y) })
             .attr('r','10px')
-            .attr('opacity', '0.3')
-            .style('fill', 'red')
+            .attr('opacity', '0.8')
+            .style('fill', function (d) { return colorScaleEmissions(factoryEmissions[ind][d['name']])})
 
         scatterPlotSvg.append("g")
             .selectAll("path")
@@ -582,8 +591,8 @@ function drawSmoke()
             .attr('cx', function (d) { return x(d.x - 29) })
             .attr('cy', function (d) { return y(d.y) })
             .attr('r','10px')
-            .attr('opacity', '0.3')
-            .style('fill', 'red')
+            .attr('opacity', '0.8')
+            .style('fill', function (d) { return colorScaleEmissions(factoryEmissions[ind][d['name']])})
 
         scatterPlotSvg.append("g")
             .selectAll("path")
@@ -594,8 +603,8 @@ function drawSmoke()
             .attr('cx', function (d) { return x(d.x - 27) })
             .attr('cy', function (d) { return y(d.y) })
             .attr('r','10px')
-            .attr('opacity', '0.3')
-            .style('fill', 'red')
+            .attr('opacity', '0.8')
+            .style('fill', function (d) { return colorScaleEmissions(factoryEmissions[ind][d['name']])})
     }
 
 }
