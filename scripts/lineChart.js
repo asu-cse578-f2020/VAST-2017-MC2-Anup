@@ -158,7 +158,7 @@ function drawLineChart(monthName,sensor) {
             tooltip.transition()
             .duration(50)
             .style("opacity", 1);
-            tooltip.html("Sensor: "+ sensor +"<br>Chemical: " +"Agoc 3A" + "<br>Date: "+monthNames[newData.x.getMonth()]+" "+ newData.x.getDate()+"<br>Reading: "+newData.y)
+            tooltip.html("Sensor: "+ sensor +"<br>Chemical: " +"Agoc 3A" + "<br>Date: "+monthNames[newData.x.getMonth()]+" "+ newData.x.getDate()+"<br>Reading: "+newData.y.toFixed(4))
             .style("left", (d3.event.pageX) + "px")
             .style("top", (d3.event.pageY) + "px");
     
@@ -194,7 +194,7 @@ function drawLineChart(monthName,sensor) {
             tooltip.transition()
             .duration(50)
             .style("opacity", 1);
-            tooltip.html("Sensor: "+ sensor +"<br>Chemical: " +"Appluimonia" + "<br>Date: "+monthNames[newData.x.getMonth()] +" "+ newData.x.getDate()+"<br>Reading: "+newData.y)
+            tooltip.html("Sensor: "+ sensor +"<br>Chemical: " +"Appluimonia" + "<br>Date: "+monthNames[newData.x.getMonth()] +" "+ newData.x.getDate()+"<br>Reading: "+newData.y.toFixed(4))
             .style("left", (d3.event.pageX) + "px")
             .style("top", (d3.event.pageY) + "px");
     
@@ -230,7 +230,7 @@ function drawLineChart(monthName,sensor) {
             tooltip.transition()
             .duration(50)
             .style("opacity", 1);
-            tooltip.html("Sensor: "+ sensor +"<br>Chemical: " +"Chlorodinine" + "<br>Date: "+monthNames[newData.x.getMonth()] +" "+ newData.x.getDate()+"<br>Reading: "+newData.y)
+            tooltip.html("Sensor: "+ sensor +"<br>Chemical: " +"Chlorodinine" + "<br>Date: "+monthNames[newData.x.getMonth()] +" "+ newData.x.getDate()+"<br>Reading: "+newData.y.toFixed(4))
             .style("left", (d3.event.pageX) + "px")
             .style("top", (d3.event.pageY) + "px");
     
@@ -265,7 +265,7 @@ function drawLineChart(monthName,sensor) {
             tooltip.transition()
             .duration(50)
             .style("opacity", 1);
-            tooltip.html("Sensor: "+ sensor +"<br>Chemical: " +"Methylosmolene" + "<br>Date: "+monthNames[newData.x.getMonth()] +" "+ newData.x.getDate()+"<br>Reading: "+newData.y)
+            tooltip.html("Sensor: "+ sensor +"<br>Chemical: " +"Methylosmolene" + "<br>Date: "+monthNames[newData.x.getMonth()] +" "+ newData.x.getDate()+"<br>Reading: "+newData.y.toFixed(4))
             .style("left", (d3.event.pageX) + "px")
             .style("top", (d3.event.pageY) + "px");
     
@@ -313,7 +313,7 @@ function drawLineChart(monthName,sensor) {
         .style("font-weight", "bold") 
         .style("font-family", "sans-serif") 
         .style("text-decoration", "underline")  
-        .text("Chemical Readings vs Time");    
+        .text("Chemical Readings vs Time (Sensor " +sensor_no +")");    
 }
 
 
