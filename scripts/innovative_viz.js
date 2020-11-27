@@ -36,6 +36,9 @@ var factory;
 var data;
 var windData;
 var completeData;
+var smokeLocations;
+
+var levels = 0;
 // svg elements
 var gDots;
 var ind = 0;
@@ -71,10 +74,11 @@ function drawInitialViz() {
 function loadData() {
     Promise.all([d3.csv('data/sensor_locations.csv'),
     d3.csv('data/windData.csv'),
-    d3.csv('../data/complete_data.csv')]).then(function (values) {
+    d3.csv('../data/complete_data.csv'), d3.csv('../data/smoke_locations.csv')]).then(function (values) {
         data = values[0];
         windData = values[1];
         completeData = values[2];
+        smokeLocations = values[3];
 
         x.domain([0, d3.max(data, function (d) {
             return +d["x"];
@@ -111,8 +115,7 @@ function drawScatterPlot() {
         .attr("font-weight", 700)
         .text("Sensor & Factory Locations");
 
-
-    var shape = d3.scaleOrdinal(data.map(d => d.type), d3.symbols.map(s => symbol.type(s)()))
+    drawSmoke()
 
     var sensorFactories = scatterPlotSvg.append("g")
         .attr("stroke-width", 1.5)
@@ -183,6 +186,21 @@ function drawScatterPlot() {
         curDateBg.text(windData[ind]['Date Time '])
 
         drawCompass([windData[ind]])
+
+        scatterPlotSvg
+            .selectAll(".smoke")
+            .transition()
+            .attr('r', '0px')
+            .remove()
+
+        drawSmoke()
+
+        levels+=1
+        if (levels == 3)
+        {
+            levels = 0
+        }
+
         })
 }
 
@@ -291,6 +309,21 @@ function circleTransitions() {
         d3.select("#dateSlider").property("value", ind)
 
         drawCompass([windData[ind]]);
+
+        scatterPlotSvg
+            .selectAll(".smoke")
+            .transition()
+            .attr('r', '0px')
+            .remove()
+
+        drawSmoke()
+
+        levels+=1
+        if (levels == 3)
+        {
+            levels = 0
+        }
+
     }
     else if (ind == windData.length - 1) {
         ind = 0;
@@ -472,4 +505,97 @@ function calcHull(days){
   }
 
   return points;
+}
+
+function drawSmoke()
+{
+
+    scatterPlotSvg.append("g")
+        .selectAll("path")
+        .data(smokeLocations)
+        .enter()
+        .append('circle')
+        .attr('class', 'smoke')
+        .attr('cx', function (d) { return x(d.x - 28) })
+        .attr('cy', function (d) { return y(d.y - 2) })
+        .attr('r','10px')
+        .attr('opacity', '0.3')
+        .style('fill', 'red')
+
+    if (levels > 0) {
+        scatterPlotSvg.append("g")
+            .selectAll("path")
+            .data(smokeLocations)
+            .enter()
+            .append('circle')
+            .attr('class', 'smoke')
+            .attr('cx', function (d) { return x(d.x - 28.5) })
+            .attr('cy', function (d) { return y(d.y - 1) })
+            .attr('r','10px')
+            .attr('opacity', '0.3')
+            .style('fill', 'red')
+
+        scatterPlotSvg.append("g")
+            .selectAll("path")
+            .data(smokeLocations)
+            .enter()
+            .append('circle')
+            .attr('class', 'smoke')
+            .attr('cx', function (d) { return x(d.x - 27.5) })
+            .attr('cy', function (d) { return y(d.y - 1) })
+            .attr('r','10px')
+            .attr('opacity', '0.3')
+            .style('fill', 'red')
+    }
+
+    if (levels > 1) {
+        scatterPlotSvg.append("g")
+            .selectAll("path")
+            .data(smokeLocations)
+            .enter()
+            .append('circle')
+            .attr('class', 'smoke')
+            .attr('cx', function (d) { return x(d.x - 28.5) })
+            .attr('cy', function (d) { return y(d.y) })
+            .attr('r','10px')
+            .attr('opacity', '0.3')
+            .style('fill', 'red')
+
+        scatterPlotSvg.append("g")
+            .selectAll("path")
+            .data(smokeLocations)
+            .enter()
+            .append('circle')
+            .attr('class', 'smoke')
+            .attr('cx', function (d) { return x(d.x - 27.5) })
+            .attr('cy', function (d) { return y(d.y) })
+            .attr('r','10px')
+            .attr('opacity', '0.3')
+            .style('fill', 'red')
+
+        scatterPlotSvg.append("g")
+            .selectAll("path")
+            .data(smokeLocations)
+            .enter()
+            .append('circle')
+            .attr('class', 'smoke')
+            .attr('cx', function (d) { return x(d.x - 29) })
+            .attr('cy', function (d) { return y(d.y) })
+            .attr('r','10px')
+            .attr('opacity', '0.3')
+            .style('fill', 'red')
+
+        scatterPlotSvg.append("g")
+            .selectAll("path")
+            .data(smokeLocations)
+            .enter()
+            .append('circle')
+            .attr('class', 'smoke')
+            .attr('cx', function (d) { return x(d.x - 27) })
+            .attr('cy', function (d) { return y(d.y) })
+            .attr('r','10px')
+            .attr('opacity', '0.3')
+            .style('fill', 'red')
+    }
+
 }
