@@ -19,7 +19,7 @@ function drawHeatMap(data, factory){
 
 	d3.select("#heatMapSvg").remove();
 	d3.selectAll('.title-text').remove();
-	d3.selectAll("defs").remove();
+	d3.select("#heatMapSvg").selectAll("defs").remove();
 	heatMapSvg = d3.select("#heatmap").append("svg")
 					.attr("id", "heatMapSvg")
 					.attr("width", width + margin.left + margin.right)

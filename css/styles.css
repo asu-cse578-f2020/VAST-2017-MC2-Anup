@@ -5,14 +5,14 @@
 input {
   width:50px;
 }
-svg {
+svg, #innovative_dataviz_main {
   border:1px solid gray;
   border-radius:10px;
   /* height:600px;
   width:600px; */
   margin:5px;
 }
-.line-svg{
+.line-svg, #inno_viz{
   border:none
 }
 #linechart {

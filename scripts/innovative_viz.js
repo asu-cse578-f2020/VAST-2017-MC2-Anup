@@ -11,6 +11,7 @@ var symbol = d3.symbol().size(150);
 
 var scatterPlotSvg = d3.select("#innovative_dataviz")
     .append("svg")
+    .attr("id", "inno_viz")
     .attr("width", scatterPlotWidth + scatterPlotMargin.left + scatterPlotMargin.right)
     .attr("height", scatterPlotHeight + scatterPlotMargin.top + scatterPlotMargin.bottom)
     .append("g")
@@ -396,16 +397,28 @@ function drawCalender(){
    
   days
       .on('mouseover', function (d, i) {
+        if ([1,2,3,4].includes(+d3.select(this).select("text").text()) && +document.getElementById("months-innovative_dataviz").value == 7){
+        }
+        else{
             d3.select(this).select("text")
             .style("stroke-width", 1)
             .attr("stroke", "red")
+        }
         })
     .on('mouseout', function (d, i) {
-          d3.select(this).select("text")
+        if ([1,2,3,4].includes(+d3.select(this).select("text").text()) && +document.getElementById("months-innovative_dataviz").value == 7){
+        }
+        else{
+            d3.select(this).select("text")
             .style("stroke-width", 0)
             .attr("stroke", "black")  
+        }
         })
     .on('click', function (d, i) {
+        if ([1,2,3,4].includes(+d3.select(this).select("text").text()) && +document.getElementById("months-innovative_dataviz").value == 7){
+
+        }
+        else{
             var dateFromCalender = new Date(2016, +document.getElementById("months-innovative_dataviz").value, +d3.select(this).select("text").text(),1);
             var temp = []
             windData.forEach(function(d,i){
@@ -416,6 +429,7 @@ function drawCalender(){
             stopAnimation()
             ind = temp[0];
             toggleAnimation()
+        }
         })
 
   dayNums
