@@ -239,3 +239,17 @@ body {
 .bg-custom-2 {
 background-image: linear-gradient(15deg, #13547a 0%, #80d0c7 100%);
 }
+#info_icon{
+  width:20px;
+  height:20px;
+}
+.modal-content
+{
+  background: linear-gradient(0.25turn,#F0FFF0, #FFFAFA,#F0FFF0) 	;
+}
+.tabletext
+{
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 14px;
+  font-weight: normal;
+}
