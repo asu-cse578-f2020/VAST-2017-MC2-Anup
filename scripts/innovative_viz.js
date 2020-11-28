@@ -119,7 +119,7 @@ function loadData() {
             .attr("stroke", "#D3D3D3")
             .attr("marker-end", "url(#triangle)")
             .call(lineAnimate)
-            .attr("transform", d => 'rotate(' + windData[ind]['direction'] + ' ' + x(d.x0) + ' ' + y(d.y0) + ')');
+            .attr("transform", d => 'rotate(' + windData[ind]['direction'] + ' ' + (scatterPlotWidth/2+50) + ' ' + (scatterPlotHeight/2+40) + ')');
 
 
     });
@@ -275,7 +275,7 @@ function drawScatterPlot() {
         }
 
         console.log(windData[ind]['direction'])
-        windG.attr("transform", d => 'rotate(' + (windData[ind]['direction'] - 180) + ')');
+        windG.attr("transform", d => 'rotate(' + (windData[ind]['direction']-180)  + ' ' + (scatterPlotWidth/2+50) + ' ' + (scatterPlotHeight/2+40) +  ')');
         drawCompass([windData[ind]])
     })
 
@@ -400,7 +400,7 @@ function circleTransitions() {
             levels = 0
         }
 
-        windG.attr("transform", d => 'rotate(' + (windData[ind]['direction'] - 180) + ')');
+        windG.attr("transform", d => 'rotate(' + (windData[ind]['direction']-180)  + ' ' + (scatterPlotWidth/2+50) + ' ' + (scatterPlotHeight/2+40) + ')');
     }
     else if (ind == windData.length - 1) {
         ind = 0;
