@@ -229,6 +229,11 @@ body {
   fill: none;
   stroke: #888;
 }
+
+line {
+	stroke: #555;
+	stroke-width: 2px;
+}
 #month-dropdown{
   left: 22%;
   position: relative;
