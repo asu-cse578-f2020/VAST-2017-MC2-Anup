@@ -89,15 +89,11 @@ function drawLineChart(monthName,sensor) {
             return xDate;
     }))
 
-    let yScale = d3.scaleLinear()
+    let yScale = d3.scaleLog()
     .range([ height, 0 ])
     .domain([d3.min(data, function (d) {
-        var xDate =  timeConv(d.Date)
-        if(xDate.getMonth()===month && d.Monitor===sensor) 
             return +d.Reading
     }), d3.max(data, function(d) { 
-        var xDate =  timeConv(d.Date)
-        if(xDate.getMonth()===month && d.Monitor===sensor) 
             return +d.Reading; 
     })])
 
@@ -106,7 +102,7 @@ function drawLineChart(monthName,sensor) {
         .call(d3.axisBottom(xScale).ticks(3));
 
     svg.append("g")
-        .call(d3.axisLeft(yScale));
+        .call(d3.axisLeft(yScale).ticks(11,".1n"));
 
 
     var lineGen = d3.line()
@@ -295,25 +291,25 @@ function drawLineChart(monthName,sensor) {
     svg.append("text")
         .attr("class", "y label")
         .attr("text-anchor", "end")
-        .attr("x", -150)
+        .attr("x", -120)
         .style("font-size", "14px") 
         .style("font-weight", "bold") 
         .style("font-family", "sans-serif") 
         .attr("y", -50)
         .attr("dy", ".75em")
         .attr("transform", "rotate(-90)")
-        .text("Readings");
+        .text("Chemical Reading Value");
 
 
     svg.append("text")
-        .attr("x", (width / 2))             
+        .attr("x", (width / 2)+50)             
         .attr("y", 4 )
         .attr("text-anchor", "middle")  
         .style("font-size", "16px") 
         .style("font-weight", "bold") 
         .style("font-family", "sans-serif") 
         .style("text-decoration", "underline")  
-        .text("Chemical Readings vs Time (Sensor " +sensor_no +")");    
+        .text("Avg. Reading per day vs Time (Sensor " +sensor_no +")");    
 }
 
 

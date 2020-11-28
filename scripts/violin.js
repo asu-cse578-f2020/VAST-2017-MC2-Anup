@@ -95,7 +95,7 @@ function drawViolinPlot(data,Chemical, sensor_no)
 				.duration(50)
 				.style("opacity", 1);
 
-			    tooltip.html("Median: "+ d.value.median.toFixed(4))
+			    tooltip.html("Median: "+ d.value.median.toFixed(4)+"<br>"+"Max: "+d.value.max.toFixed(4)+"<br>"+"Min: "+d.value.min.toFixed(4))
 				.style("left", (d3.event.pageX) + "px")
 				.style("top", (d3.event.pageY) + "px");
             })
@@ -105,7 +105,7 @@ function drawViolinPlot(data,Chemical, sensor_no)
 				.duration(50)
 				.style("opacity", 1);
 
-			    tooltip.html("Median: "+ d.value.median.toFixed(4))
+			    tooltip.html("Median: "+ d.value.median.toFixed(4)+"<br>"+"Max: "+d.value.max.toFixed(4)+"<br>"+"Min: "+d.value.min.toFixed(4))
 				.style("left", (d3.event.pageX) + "px")
 				.style("top", (d3.event.pageY) + "px");
             })
