@@ -392,7 +392,12 @@ function circleTransitions() {
         d3.select("#dateSlider").attr("value", ind)
         d3.select("#dateSlider").property("value", ind)
 
-        // drawCompass([windData[ind]]);
+        drawCompass([windData[ind]]);
+
+        windG
+            .transition()
+            .ease(d3.easeLinear)
+            .attr("transform", d => 'rotate(' + (windData[ind]['direction'] - 180) + ' ' + (scatterPlotWidth / 2 + 50) + ' ' + (scatterPlotHeight / 2 + 40) + ')');
 
         scatterPlotSvg
             .selectAll(".smoke")
@@ -407,11 +412,7 @@ function circleTransitions() {
             levels = 0
         }
 
-        console.log('here')
-        windG
-            .transition()
-            .ease(d3.easeLinear)
-            .attr("transform", d => 'rotate(' + (windData[ind]['direction'] - 180) + ' ' + (scatterPlotWidth / 2 + 50) + ' ' + (scatterPlotHeight / 2 + 40) + ')');
+        
     }
     else if (ind == windData.length - 1) {
         ind = 0;
