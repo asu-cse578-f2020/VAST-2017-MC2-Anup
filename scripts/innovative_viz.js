@@ -100,26 +100,15 @@ function loadData() {
 
         colorScaleEmissions.domain([-50, 151.8132489])
 
+        prepareWindData()
+
         // drawCircles()
         drawScatterPlot()
         drawCompass([windData[ind]])
 
-        prepareWindData()
 
-        windG = scatterPlotSvg.append('g')
 
-        windG.selectAll('line')
-            .data(windLines)
-            .enter()
-            .append("line")
-            .attr('x1', function (d) { return x(d.x0) })
-            .attr('y1', function (d) { return y(d.y0) })
-            .attr('class', 'gaugeChart-needle')
-            .attr('stroke-width', 0.5)
-            .attr("stroke", "#D3D3D3")
-            .attr("marker-end", "url(#triangle)")
-            .call(lineAnimate)
-            .attr("transform", d => 'rotate(' + windData[ind]['direction'] + ' ' + (scatterPlotWidth/2+50) + ' ' + (scatterPlotHeight/2+40) + ')');
+
 
 
     });
@@ -179,6 +168,21 @@ function lineAnimate(selection) {
 
 function drawScatterPlot() {
     scatterPlotSvg.selectAll("*").remove()
+
+    windG = scatterPlotSvg.append('g')
+
+    windG.selectAll('line')
+        .data(windLines)
+        .enter()
+        .append("line")
+        .attr('x1', function (d) { return x(d.x0) })
+        .attr('y1', function (d) { return y(d.y0) })
+        .attr('class', 'gaugeChart-needle')
+        .attr('stroke-width', 0.5)
+        .attr("stroke", "#D3D3D3")
+        .attr("marker-end", "url(#triangle)")
+        .call(lineAnimate)
+        .attr("transform", d => 'rotate(' + windData[ind]['direction'] + ' ' + (scatterPlotWidth / 2 + 50) + ' ' + (scatterPlotHeight / 2 + 40) + ')');
 
     scatterPlotSvg.append("text")
         .attr("x", (scatterPlotWidth / 2))
@@ -275,7 +279,10 @@ function drawScatterPlot() {
         }
 
         console.log(windData[ind]['direction'])
-        windG.attr("transform", d => 'rotate(' + (windData[ind]['direction']-180)  + ' ' + (scatterPlotWidth/2+50) + ' ' + (scatterPlotHeight/2+40) +  ')');
+        windG
+            .transition()
+            .ease(d3.easeLinear)
+            .attr("transform", d => 'rotate(' + (windData[ind]['direction'] - 180) + ' ' + (scatterPlotWidth / 2 + 50) + ' ' + (scatterPlotHeight / 2 + 40) + ')');
         drawCompass([windData[ind]])
     })
 
@@ -385,7 +392,7 @@ function circleTransitions() {
         d3.select("#dateSlider").attr("value", ind)
         d3.select("#dateSlider").property("value", ind)
 
-        drawCompass([windData[ind]]);
+        // drawCompass([windData[ind]]);
 
         scatterPlotSvg
             .selectAll(".smoke")
@@ -400,7 +407,11 @@ function circleTransitions() {
             levels = 0
         }
 
-        windG.attr("transform", d => 'rotate(' + (windData[ind]['direction']-180)  + ' ' + (scatterPlotWidth/2+50) + ' ' + (scatterPlotHeight/2+40) + ')');
+        console.log('here')
+        windG
+            .transition()
+            .ease(d3.easeLinear)
+            .attr("transform", d => 'rotate(' + (windData[ind]['direction'] - 180) + ' ' + (scatterPlotWidth / 2 + 50) + ' ' + (scatterPlotHeight / 2 + 40) + ')');
     }
     else if (ind == windData.length - 1) {
         ind = 0;
