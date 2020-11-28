@@ -9,7 +9,8 @@ var height = 524 - margin.top - margin.bottom;
 function drawViolinPlot(data,Chemical, sensor_no)
 {
     //filtering out the data first
-    filteredData= data.filter(function (d) { return d.Chemical==Chemical})
+    filteredData= data.filter(function (d) { return d.Chemical==Chemical && d.Monitor == sensor_no})
+    //console.log("filtered data",filteredData)
     filteredData.forEach(d => {
          d.Reading = +d.Reading;
          d.Month = new Date(d.DateTime);
@@ -64,7 +65,7 @@ function drawViolinPlot(data,Chemical, sensor_no)
           return({q1: q1, median: median, q3: q3, interQuantileRange: interQuantileRange, min: min, max: max})
         })
         .entries(filteredData)
-    console.log("sum stat",sumstat)
+    //console.log("sum stat",sumstat)
     violinSvg
         .selectAll("vertLines")
         .data(sumstat)
