@@ -48,32 +48,32 @@ data["indigo_emission"] = (
 )
 
 rr_gr_data = (
-    data.groupby(["Month"])["roadrunner_emission"].sum().reset_index()
+    data.groupby(["Chemical"])["roadrunner_emission"].sum().reset_index()
 )
 rr_gr_data["factory"] = "RoadRunner"
-rr_gr_data = rr_gr_data[["factory", "Month", "roadrunner_emission"]].rename(
-    columns={"roadrunner_emission": "emission", "factory": "Col1", "Month": 'Col2'}
+rr_gr_data = rr_gr_data[["factory", "Chemical", "roadrunner_emission"]].rename(
+    columns={"roadrunner_emission": "emission", "factory": "Col1", "Chemical": 'Col2'}
 )
 
 
-ka_gr_data = data.groupby(["Month"])["kasios_emission"].sum().reset_index()
+ka_gr_data = data.groupby(["Chemical"])["kasios_emission"].sum().reset_index()
 ka_gr_data["factory"] = "Kasios"
-ka_gr_data = ka_gr_data[["factory", "Month", "kasios_emission"]].rename(
-    columns={"kasios_emission": "emission", "factory": "Col1", "Month": 'Col2'}
+ka_gr_data = ka_gr_data[["factory", "Chemical", "kasios_emission"]].rename(
+    columns={"kasios_emission": "emission", "factory": "Col1", "Chemical": 'Col2'}
 )
 
 ra_gr_data = (
-    data.groupby(["Month"])["radiance_emission"].sum().reset_index()
+    data.groupby(["Chemical"])["radiance_emission"].sum().reset_index()
 )
 ra_gr_data["factory"] = "Radiance"
-ra_gr_data = ra_gr_data[["factory", "Month", "radiance_emission"]].rename(
-    columns={"radiance_emission": "emission", "factory": "Col1", "Month": 'Col2'}
+ra_gr_data = ra_gr_data[["factory", "Chemical", "radiance_emission"]].rename(
+    columns={"radiance_emission": "emission", "factory": "Col1", "Chemical": 'Col2'}
 )
 
-in_gr_data = data.groupby(["Month"])["indigo_emission"].sum().reset_index()
+in_gr_data = data.groupby(["Chemical"])["indigo_emission"].sum().reset_index()
 in_gr_data["factory"] = "Indigo"
-in_gr_data = in_gr_data[["factory", "Month", "indigo_emission"]].rename(
-    columns={"indigo_emission": "emission", "factory": "Col1", "Month": 'Col2'}
+in_gr_data = in_gr_data[["factory", "Chemical", "indigo_emission"]].rename(
+    columns={"indigo_emission": "emission", "factory": "Col1", "Chemical": 'Col2'}
 )
 
 
@@ -83,6 +83,5 @@ gr_data = data.groupby(["Chemical", "Month"])["Reading"].sum().reset_index()
 gr_data = gr_data.rename(columns={"Reading": "emission", "Chemical": "Col2", "Month": 'Col1'})
 
 final_data = pd.concat([final_data, gr_data], axis=0)
-print(final_data)
 
-final_data.to_csv('sankey.csv', index=False)
+final_data.to_csv('sankey1.csv', index=False)
