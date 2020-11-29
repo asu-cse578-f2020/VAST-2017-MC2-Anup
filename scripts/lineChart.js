@@ -1,5 +1,5 @@
 export {drawLineChart}
-import { drawViolinPlot } from './violin.js'
+import { drawViolinPlot } from './box.js'
 let margin = {top: 10, right: 30, bottom: 50, left: 60}
 let width = 460 - margin.left - margin.right
 let height = 400 - margin.top - margin.bottom
