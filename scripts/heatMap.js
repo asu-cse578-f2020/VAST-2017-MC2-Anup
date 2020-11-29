@@ -103,7 +103,7 @@ function drawCalender(data, factory){
 	});
 	var scale = d3.scaleLinear()
 		.domain(extent)
-		.range([0, 1.25]); 
+		.range([0, 1]); 
 		
 	var tooltipHtml = d =>  "Date: " + titleFormat(new Date(d)) + 
 					"<br>Reading:  " + reading[d].toFixed(2); 
@@ -215,7 +215,7 @@ function drawCalender(data, factory){
         .attr("class", `x-axis`)
         .attr("transform", `translate(0, 25)`)
         .call(d3.axisBottom(axisScale)
-            .ticks(width / 75)
+            .ticks(width/100)
             .tickSize(-barHeight));
 
     heatMapSvg.append('g')
