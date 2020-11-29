@@ -8,6 +8,12 @@ const height = outerHeight - margin.top - margin.bottom;
 const colorScale =  d3.scaleSequential()
                   .interpolator(d3.interpolateOrRd);
 
+// div for tooltip
+var div = d3.select("body")
+		    .append("div")
+		    .attr("class", "tooltip")
+			.style("opacity", 0);                  
+
 d3.json("data/sankey.json").then(function (data) {
 
     var svg = d3.select("#sankey").append("svg")
@@ -48,6 +54,25 @@ d3.json("data/sankey.json").then(function (data) {
         .attr('opacity', 0.2)
         .attr('stroke', function(d) { return d.color = colorScale(d.value); })
         .attr("stroke-width", function(d) { return Math.max(1, d.dy); })
+        .on("mouseover",function(d){
+            if (d3.event.defaultPrevented) return;
+            tooltipHtml = "Value: " + d.value
+            div.transition()
+				.duration(50)
+				.style("opacity", 1);
+
+			div.html(tooltipHtml)
+				.style("left", (d3.event.pageX) + "px")
+                .style("top", (d3.event.pageY) + "px");
+                
+        })
+        .on("mouseout",function(d){
+            if (d3.event.defaultPrevented) return;
+            div.transition()
+				.duration(50)
+				.style("opacity", 0);
+                
+        })
         .sort(function(a, b) { return b.dy - a.dy; });
 
     var node = svg.append("g")
