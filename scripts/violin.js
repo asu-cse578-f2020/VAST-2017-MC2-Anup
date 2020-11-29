@@ -6,6 +6,13 @@ var months=["January", "February", "March", "April", "May","June","July", "Augus
 var margin = {top: 10, right: 30, bottom: 74, left: 40};
 var width = 460 - margin.left - margin.right;
 var height = 524 - margin.top - margin.bottom;
+var colors= {
+    "AGOC-3A":" #82e0aa",
+    "Appluimonia":"#85c1e9",
+    "Methylosmolene":"#f0b27a",
+    "Chlorodinine":" #f1948a"
+
+}
 function drawViolinPlot(data,Chemical, sensor_no)
 {
     //filtering out the data first
@@ -88,7 +95,7 @@ function drawViolinPlot(data,Chemical, sensor_no)
             .attr("height", function(d){return(y(d.value.q1)-y(d.value.q3))})
             .attr("width", boxWidth )
             .attr("stroke", "black")
-            .style("fill", "#afc2dd")
+            .style("fill", function(d){ return colors[Chemical]})
             .on("mouseover", function(d)
             {
                 tooltip.transition()
