@@ -105,12 +105,6 @@ function loadData() {
         // drawCircles()
         drawScatterPlot()
         drawCompass([windData[ind]])
-
-
-
-
-
-
     });
 
     // On chemical change call heat map for new chemical
@@ -127,7 +121,7 @@ function prepareWindData() {
 
     var xCoord = [40, 50, 60, 70, 80, 90, 100]
     var yCoord = [0, 10, 20, 30]
-    var windDelay = [200, 400, 600, 800]
+    var windDelay = [100, 200, 300, 400]
 
     windLines = []
     // y = x
@@ -140,7 +134,7 @@ function prepareWindData() {
                 x1: xCoord[i],
                 y1: yCoord[j] + 2,
                 s: windSpeed,
-                duration: 1000 / windSpeed, /* pre-compute duration */
+                duration: 200 / windSpeed, /* pre-compute duration */
                 delay: windDelay[j] /* pre-compute delay */
             }
             windLines.push(line)
@@ -166,11 +160,9 @@ function lineAnimate(selection) {
         .on('end', function () { d3.select(this).call(lineAnimate) });
 }
 
-function drawScatterPlot() {
-    scatterPlotSvg.selectAll("*").remove()
-
+function drawWind() {
+    scatterPlotSvg.selectAll('line').remove()
     windG = scatterPlotSvg.append('g')
-
     windG.selectAll('line')
         .data(windLines)
         .enter()
@@ -183,6 +175,12 @@ function drawScatterPlot() {
         .attr("marker-end", "url(#triangle)")
         .call(lineAnimate)
         .attr("transform", d => 'rotate(' + windData[ind]['direction'] + ' ' + (scatterPlotWidth / 2 + 50) + ' ' + (scatterPlotHeight / 2 + 40) + ')');
+}
+
+function drawScatterPlot() {
+    scatterPlotSvg.selectAll("*").remove()
+
+    drawWind();
 
     scatterPlotSvg.append("text")
         .attr("x", (scatterPlotWidth / 2))
@@ -278,11 +276,7 @@ function drawScatterPlot() {
             levels = 0
         }
 
-        console.log(windData[ind]['direction'])
-        windG
-            .transition()
-            .ease(d3.easeLinear)
-            .attr("transform", d => 'rotate(' + (windData[ind]['direction'] - 180) + ' ' + (scatterPlotWidth / 2 + 50) + ' ' + (scatterPlotHeight / 2 + 40) + ')');
+        drawWind()
         drawCompass([windData[ind]])
     })
 
@@ -392,12 +386,8 @@ function circleTransitions() {
         d3.select("#dateSlider").attr("value", ind)
         d3.select("#dateSlider").property("value", ind)
 
+        drawWind()
         drawCompass([windData[ind]]);
-
-        windG
-            .transition()
-            .ease(d3.easeLinear)
-            .attr("transform", d => 'rotate(' + (windData[ind]['direction'] - 180) + ' ' + (scatterPlotWidth / 2 + 50) + ' ' + (scatterPlotHeight / 2 + 40) + ')');
 
         scatterPlotSvg
             .selectAll(".smoke")
@@ -412,7 +402,7 @@ function circleTransitions() {
             levels = 0
         }
 
-        
+
     }
     else if (ind == windData.length - 1) {
         ind = 0;
