@@ -151,7 +151,7 @@ function drawViolinPlot(data,Chemical, sensor_no)
         .attr("font-family","sans-serif")
         .text("Months");
     violinSvg.append("text")
-        .attr("transform", "translate(" + (width/2+40) + " ," + (height - (margin.bottom-140)) + ")")
+        .attr("transform", "translate(" + width/2 + " ," + (height - (margin.bottom-140)) + ")")
         .style("fill","gray")
         .style("font-size","15px")
         .style("font-family","Segoe UI")
